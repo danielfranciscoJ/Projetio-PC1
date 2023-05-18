@@ -1,0 +1,53 @@
+
+Numero de Livros: 4
+
+Numero de Leitores: 2
+
+
+Livro1:
+
+ISBN: 12345
+Titulo: titulo1
+Autor: autor1
+Editora: editora1
+Estado: disponivel
+
+Livro2:
+
+ISBN: 123456
+Titulo: titulo2
+Autor: autor2
+Editora: editora2
+Estado: requisitado
+
+Livro3:
+
+ISBN: 12345
+Titulo: tirulo1
+Autor: auto231
+Editora: 1234124
+Estado: disponivel
+
+Livro4:
+
+ISBN: 1234567890123
+Titulo: 124141
+Autor: 41241414
+Editora: 12412412
+Estado: disponivel
+
+Leitor 1: 
+
+Codigo_leitor: 12345
+Nome: diogo
+Data de Nascimento: 11-12-12
+Localidade: leiria
+Contacto: 1241241
+
+Leitor 2: 
+
+Codigo_leitor: 124124
+Nome: diogo1
+Data de Nascimento: 1231-1231-1231
+Localidade: 122131
+Contacto: 123123

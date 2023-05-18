@@ -1,0 +1,9 @@
+# depslib dependency file v1.0
+1684427524 source:c:\users\diogo\desktop\projeto\projeto.c
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	<time.h>
+	<conio.h>
+	<windows.h>
+
