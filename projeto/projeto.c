@@ -53,6 +53,8 @@ return 0;
 void menu(){
     int num=0;
 
+        system("cls");
+
         printf("\t-- Gestao de Requisicoes de uma Biblioteca --\n\n");
         printf("Total de Livros:%d \t\t\t Total de Leitores:%d \n",nlivro,nleitor);
         printf("Total de Requisicoes ativas: \n\n");
@@ -95,6 +97,7 @@ void menu(){
 }
 void registar_livro(){
     char opcao;
+
 
     fflush(stdin);
     printf("Digite o ISBN:\n");
@@ -258,6 +261,8 @@ void devolver_livro(){
  }
 void listagens(){
 
+    system("cls");
+
     int num=0;
         printf("\t-- Listagem --\n\n");
         printf("\t1 - Livro \n");
@@ -273,6 +278,7 @@ void listagens(){
         printf("\n");
         switch(num){
             case 1:
+                system("cls");
                 for (int n = 0; n < nlivro; n++) {
                     printf("\nLivro%d:\n\n", n + 1);
                     printf("ISBN:\t\t %ld\n", livro[n].ISBN);
@@ -287,6 +293,7 @@ void listagens(){
             break;
 
             case 2:
+                system("cls");
                 for (int n = 0; n < nleitor; n++) {
                     printf("\nLeitor %d: \n\n", n + 1);
                     printf("Codigo_leitor:\t\t %d\n", leitor[n].Codigo_leitor);

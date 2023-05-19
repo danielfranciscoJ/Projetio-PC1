@@ -1,0 +1,3 @@
+Registar Livro:
+-Se se meter o ISBN 13 o número guardado n tem nada a ver.
+-Se o ISBN 10 tiver um 0 no inicio o programa ignora o 0.

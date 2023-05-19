@@ -1,7 +1,7 @@
 
 Numero de Livros: 4
 
-Numero de Leitores: 2
+Numero de Leitores: 3
 
 
 Livro1:
@@ -30,7 +30,7 @@ Estado: disponivel
 
 Livro4:
 
-ISBN: 1234567890123
+ISBN: 1912276171
 Titulo: 124141
 Autor: 41241414
 Editora: 12412412
@@ -51,3 +51,11 @@ Nome: diogo1
 Data de Nascimento: 1231-1231-1231
 Localidade: 122131
 Contacto: 123123
+
+Leitor 3: 
+
+Codigo_leitor: 2221378
+Nome: Daniel
+Data de Nascimento: 29-6-2004
+Localidade: Leiria
+Contacto: 965004411
