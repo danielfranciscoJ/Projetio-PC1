@@ -12,20 +12,21 @@
 #define NLIVROS 100
 #define NLEITORES 100
 
-int calculo_data_requisitar(int);
-int afixa_time();
+
 void menu();
 void registar_livro();
 void registar_leitor();
 void requisitar_livro();
 void devolver_livro();
 void listagens();
+int calculo_data_requisitar(int);
+int afixa_time();
 void carregar_ficheiro();
 void guardar_ficheiro();
 void sair();
 
 typedef struct {
-    long int ISBN;    /*ISBN tem que ser (long long int) mas esta a dar warning*/
+    long int ISBN;    //char ISBN[14]; Pode armazenar até 13 dígitos incluindo '\0', tem que ser char para poder guardar o numero 0 como primeiro digito
     char Titulo[50];
     char Autor[50];
     char Editora[50];
@@ -49,11 +50,10 @@ leitor_t leitor[NLEITORES];
 
 int nlivro=0;
 int nleitor=0;
-int n=0;
+
 
 int main(){
     carregar_ficheiro();
-
     menu();
 
 return 0;
