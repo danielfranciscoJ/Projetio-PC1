@@ -12,8 +12,8 @@
 #define NLIVROS 100
 #define NLEITORES 100
 
-
-void tempo();
+int calculo_data_requisitar(int);
+int afixa_time();
 void menu();
 void registar_livro();
 void registar_leitor();
@@ -26,37 +26,40 @@ void sair();
 
 typedef struct {
     long int ISBN;    /*ISBN tem que ser (long long int) mas esta a dar warning*/
-    char Titulo[NLIVROS];
-    char Autor[NLIVROS];
-    char Editora[NLIVROS];
-    char Estado[NLIVROS];
+    char Titulo[50];
+    char Autor[50];
+    char Editora[50];
+    char Estado[20];
+    int dia_requisitar;//ainda nao esta a guardar / carretgar txt
+    int mes_requisitar;//ainda nao esta a guardar / carretgar txt
+    int ano_requisitar;//ainda nao esta a guardar / carretgar txt
 }livro_t;
 livro_t livro[NLIVROS];
 
 typedef struct {
     int Codigo_leitor;
-    char Nome[NLEITORES];
+    char Nome[50];
     int Dia;
     int Mes;
     int Ano;
-    char Localidade[NLEITORES];
+    char Localidade[50];
     int Contacto;
 }leitor_t;
 leitor_t leitor[NLEITORES];
 
 int nlivro=0;
 int nleitor=0;
+int n=0;
 
 int main(){
     carregar_ficheiro();
+
     menu();
 
 return 0;
 }
 void menu(){
     int num=0;
-
-        system("cls");
 
         printf("\t-- Gestao de Requisicoes de uma Biblioteca --\n\n");
         printf("Total de Livros:%d \t\t\t Total de Leitores:%d \n",nlivro,nleitor);
@@ -217,18 +220,15 @@ void requisitar_livro(){
                         printf("Esta disponivel\n");
                         printf("Insira a data da requisicao!\n");
                         fflush(stdin);
-                        int dia_requisitar;
-                        int mes_requisitar;
-                        int ano_requisitar;
 
                         printf("Dia:\n");
-                        scanf("%d", &dia_requisitar);
+                        scanf("%d", &livro[n].dia_requisitar);
                         fflush(stdin);
                         printf("Mes:\n");
-                        scanf("%d", &mes_requisitar);
+                        scanf("%d", &livro[n].mes_requisitar);
                         fflush(stdin);
                         printf("Ano:\n");
-                        scanf("%d", &ano_requisitar);
+                        scanf("%d", &livro[n].ano_requisitar);
                         strcpy(livro[n].Estado, "requisitado");//Permite copiar strOrigem para strDestino.
                         menu();
                     }else{
@@ -255,6 +255,9 @@ void devolver_livro(){
         if(isbn == livro[n].ISBN){
             printf("Livro devolvido!\n");
             strcpy(livro[n].Estado, "disponivel");
+            int tempo_requisitar=calculo_data_requisitar(n);
+            int tempo_atual=afixa_time();
+            printf("O livro foi requisitado durante %d dias!\n",tempo_atual-tempo_requisitar);
             menu();
         printf("Nao existe nenhum livro este ISBN!\n");
         menu();
@@ -281,7 +284,7 @@ void listagens(){
         printf("\n");
         switch(num){
             case 1:
-                system("cls");
+
                 for (int n = 0; n < nlivro; n++) {
                     printf("\nLivro%d:\n\n", n + 1);
                     printf("ISBN:\t\t %ld\n", livro[n].ISBN);
@@ -296,7 +299,7 @@ void listagens(){
             break;
 
             case 2:
-                system("cls");
+
                 for (int n = 0; n < nleitor; n++) {
                     printf("\nLeitor %d: \n\n", n + 1);
                     printf("Codigo_leitor:\t\t %d\n", leitor[n].Codigo_leitor);
@@ -389,35 +392,70 @@ void sair(){
             menu();
     }
  }
-void tempo(){
-    time_t tempo;
-    struct tm *timeinfo;
-    char c;
-    system("cls");
 
-    while(1){
-        time(&tempo);
-        timeinfo = localtime(&tempo);
-        system("cls");
-
-        printf("Data %02d/%02d/%02d \nHoras: %02d:%02d:%02d \n", timeinfo->tm_mday, timeinfo->tm_mon+1, timeinfo->tm_year+1900, timeinfo->tm_hour, timeinfo->tm_min, timeinfo->tm_sec);
-        if(kbhit()){
-            c=getch();
-            if(c==27){
-                printf("\nTecla Escape priomida --> Fim de programa\n");
-                menu();
-            }else{
-                printf("\nTecla primida, mas sem efeito %c \n\n", c);
-                Sleep(1000);
-            }
-        }
-    }
-}
-void afixa_time(){
+int afixa_time(){//Calcula todos os dias desde a data 1/1/1 ate a data atual
     time_t tempo;
     struct tm *timeinfo;
     time(&tempo);
     timeinfo=localtime(&tempo);
-    printf("Data %02d/%02d/%02d \nHoras: %02d/%02d/%02d", timeinfo->tm_mday, timeinfo->tm_mon+1, timeinfo->tm_year+1900, timeinfo->tm_hour, timeinfo->tm_min, timeinfo->tm_sec);
+    int dia_atual=timeinfo->tm_mday, mes_atual=timeinfo->tm_mon+1, ano_atual=timeinfo->tm_year+1900;
+    printf("Data atual: %d/%d/%d\n",dia_atual,mes_atual,ano_atual);
+    int dias_mes[] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+    int total_dias_atual = 0;
+    int i=0;
+    ano_atual=ano_atual-1;
+    if(ano_atual%4 ==0){//Verifica se o ano anterior e bissexto ou nao.
+        total_dias_atual+=ano_atual*0.75*365+ano_atual*0.25*366; //Calcula todos os dias desde 1/1/1 ate ao dia 31/12 do ano anterior
+    }else{//Se nao for bissexto
+        for(i=0; ano_atual%4!=0;ano_atual--){
+            i++;
+        }
+        total_dias_atual+=ano_atual*0.75*365+ano_atual*0.25*366+i*365;//Calcula todos os dias desde 1/1/1 ate ao dia 31/12 do ano anterior
+    }
+    ano_atual+=i+1;//Soma ao ano os anos que foram removidos no ciclo for, mais 1 que foi removido no inicio. Para verificar se o ano atual e bissexto ou nao
+    if (ano_atual % 4 == 0) {//Verifica se o ano atual e bissexto
+        dias_mes[1] = 29; //Modifica o vetor de index 1 para 29 devido aos anos bisextos
+    }
+    for (i = 0; i < mes_atual - 1; i++) {//Soma os dias dos meses.
+        total_dias_atual += dias_mes[i];
+    }
+    total_dias_atual += dia_atual;//Soma o resto dos dias
+    return total_dias_atual;
+
 }
+
+int calculo_data_requisitar(int n){
+    printf("Data de requisicao %d/%d/%d\n",livro[n].dia_requisitar,livro[n].mes_requisitar,livro[n].ano_requisitar);
+    int dias_mes[] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+    int total_dias_requisitar = 0;
+    int i=0;
+    int ano = livro[n].ano_requisitar;
+    int mes = livro[n].mes_requisitar;
+    ano=ano-1;
+
+    if(ano%4 ==0){
+        total_dias_requisitar+=ano*0.75*365+ano*0.25*366;
+    }else{
+        for(i=0; ano%4!=0;ano--){
+            i++;
+        }
+        total_dias_requisitar+=ano*0.75*365+ano*0.25*366+i*365;
+    }
+    ano+=i+1;
+    if (ano % 4 == 0) {//Ano bissexto
+        dias_mes[1] = 29;
+    }
+    for (i = 0; i < mes - 1; i++) {
+        total_dias_requisitar += dias_mes[i];
+    }
+    total_dias_requisitar += livro[n].dia_requisitar;
+    return total_dias_requisitar;
+}
+
+
+
+
+
+
+
 
