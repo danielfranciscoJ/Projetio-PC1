@@ -1,0 +1,15 @@
+Coisas que faltam no programa.
+
+-Associar o leitor à requisicao
+-Acrescentar Livro inutilizado
+Listagem:
+-Listagem dos livros já requisitados e no final a quantidade total desses livros.
+-▪ Listagem das 10 últimas requisições efetuadas por um determinado leitor. 
+
+
+-Deverão ser efetuadas todas as validações e proteções necessárias ao correto
+funcionamento do programa. ex: em data meses_max 12, dias_max 31, ...
+
+-comentarios nos comandos,
+
+

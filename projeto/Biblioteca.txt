@@ -1,61 +1,48 @@
 
-Numero de Livros: 4
+Numero de Livros: 3
 
-Numero de Leitores: 3
+Numero de Leitores: 2
 
 
 Livro1:
 
-ISBN: 12345
+ISBN: 0123456789123
 Titulo: titulo1
 Autor: autor1
 Editora: editora1
-Estado: disponivel
+Estado: requisitado
+Requisitado: 15/6/2022
 
 Livro2:
 
-ISBN: 123456
+ISBN: 9876543210123
 Titulo: titulo2
 Autor: autor2
 Editora: editora2
 Estado: requisitado
+Requisitado: 12/12/2022
 
 Livro3:
 
 ISBN: 12345
-Titulo: tirulo1
-Autor: auto231
-Editora: 1234124
-Estado: disponivel
-
-Livro4:
-
-ISBN: 1912276171
-Titulo: 124141
-Autor: 41241414
-Editora: 12412412
-Estado: disponivel
+Titulo: titulo3
+Autor: autor3
+Editora: editora3
+Estado: requisitado
+Requisitado: 22/2/1223
 
 Leitor 1: 
 
 Codigo_leitor: 12345
 Nome: diogo
-Data de Nascimento: 11-12-12
+Data de Nascimento: 5/2/2023
 Localidade: leiria
-Contacto: 1241241
+Contacto: 24124141
 
 Leitor 2: 
 
-Codigo_leitor: 124124
-Nome: diogo1
-Data de Nascimento: 1231-1231-1231
-Localidade: 122131
-Contacto: 123123
-
-Leitor 3: 
-
-Codigo_leitor: 2221378
-Nome: Daniel
-Data de Nascimento: 29-6-2004
-Localidade: Leiria
-Contacto: 965004411
+Codigo_leitor: 54321
+Nome: diogo
+Data de Nascimento: 11/222/2222
+Localidade: leiria
+Contacto: 124124

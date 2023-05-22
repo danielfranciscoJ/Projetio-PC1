@@ -1,5 +1,7 @@
-//projeto
-
+/*Realizado por:
+-Diogo Cravo
+-*inserir_nome*
+*/
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -26,14 +28,14 @@ void guardar_ficheiro();
 void sair();
 
 typedef struct {
-    long int ISBN;    //char ISBN[14]; Pode armazenar até 13 dígitos incluindo '\0', tem que ser char para poder guardar o numero 0 como primeiro digito
+    char ISBN[14]; //Pode armazenar até 13 dígitos incluindo '\0', (tem que ter ser char para poder guardar zeros a esquerda)
     char Titulo[50];
     char Autor[50];
     char Editora[50];
     char Estado[20];
-    int dia_requisitar;//ainda nao esta a guardar / carretgar txt
-    int mes_requisitar;//ainda nao esta a guardar / carretgar txt
-    int ano_requisitar;//ainda nao esta a guardar / carretgar txt
+    int dia_requisitar;
+    int mes_requisitar;
+    int ano_requisitar;
 }livro_t;
 livro_t livro[NLIVROS];
 
@@ -50,6 +52,7 @@ leitor_t leitor[NLEITORES];
 
 int nlivro=0;
 int nleitor=0;
+int nrequisicoes=0;
 
 
 int main(){
@@ -60,10 +63,17 @@ return 0;
 }
 void menu(){
     int num=0;
+    char estado_requisitado[12]= "requisitado";
+    nrequisicoes=0;
+    for(int i=0; i<nlivro;i++){
+        if(strcmp(livro[i].Estado, estado_requisitado) == 0){
+            nrequisicoes++;
+        }
+    }
 
         printf("\t-- Gestao de Requisicoes de uma Biblioteca --\n\n");
         printf("Total de Livros:%d \t\t\t Total de Leitores:%d \n",nlivro,nleitor);
-        printf("Total de Requisicoes ativas: \n\n");
+        printf("Total de Requisicoes ativas:%d \n\n", nrequisicoes);
         printf("\t1 - Registar Livro \n");
         printf("\t2 - Registar Leitor \n");
         printf("\t3 - Requisitar Livro \n");
@@ -107,9 +117,8 @@ void registar_livro(){
 
     fflush(stdin);
     printf("Digite o ISBN:\n");
-
-    scanf("%ld", &livro[nlivro].ISBN);
-    printf("O ISBN e %ld \n\n", livro[nlivro].ISBN);
+    gets(livro[nlivro].ISBN);
+    printf("O ISBN e %s \n\n", livro[nlivro].ISBN);
 
     fflush(stdin);
     printf("Digite o Titulo:\n");
@@ -215,12 +224,11 @@ void requisitar_livro(){
             for(int n=0; n<nlivro; n++){
                 if(strcmp(titulo_livro, livro[n].Titulo) == 0){//Permite comparar alfabeticamente duas strings. Devolve 0 - se as duas strings forem alfabeticamente iguais
                     printf("Titulo existe!\n");
-                    char estado_disponivel[NLIVROS]= "disponivel";
+                    char estado_disponivel[11]= "disponivel";
                     if(strcmp(livro[n].Estado, estado_disponivel) == 0){
                         printf("Esta disponivel\n");
                         printf("Insira a data da requisicao!\n");
                         fflush(stdin);
-
                         printf("Dia:\n");
                         scanf("%d", &livro[n].dia_requisitar);
                         fflush(stdin);
@@ -247,27 +255,29 @@ void requisitar_livro(){
 
 }
 void devolver_livro(){
-    long int isbn;
+    char isbn[14];
     printf("Insira o ISBN do livro!\n");
-    scanf("%ld", &isbn);
+    fflush(stdin);
+    gets(isbn);
 
     for(int n=0; n<nlivro;n++){
-        if(isbn == livro[n].ISBN){
+        if(strcmp(isbn, livro[n].ISBN) == 0){
             printf("Livro devolvido!\n");
             strcpy(livro[n].Estado, "disponivel");
             int tempo_requisitar=calculo_data_requisitar(n);
             int tempo_atual=afixa_time();
             printf("O livro foi requisitado durante %d dias!\n",tempo_atual-tempo_requisitar);
+            printf("Pressione alguma tecla para continuar!\n");
+            getch();
             menu();
-        printf("Nao existe nenhum livro este ISBN!\n");
+        }
+        printf("Nao existe nenhum livro com este ISBN!\n\n");
         menu();
 
         }
     }
- }
-void listagens(){
 
-    system("cls");
+void listagens(){
 
     int num=0;
         printf("\t-- Listagem --\n\n");
@@ -287,7 +297,7 @@ void listagens(){
 
                 for (int n = 0; n < nlivro; n++) {
                     printf("\nLivro%d:\n\n", n + 1);
-                    printf("ISBN:\t\t %ld\n", livro[n].ISBN);
+                    printf("ISBN:\t\t %s\n", livro[n].ISBN);
                     printf("Titulo:\t\t %s\n", livro[n].Titulo);
                     printf("Autor:\t\t %s\n", livro[n].Autor);
                     printf("Editora:\t %s\n", livro[n].Editora);
@@ -304,7 +314,7 @@ void listagens(){
                     printf("\nLeitor %d: \n\n", n + 1);
                     printf("Codigo_leitor:\t\t %d\n", leitor[n].Codigo_leitor);
                     printf("Nome:\t\t\t %s\n", leitor[n].Nome);
-                    printf("Data de Nascimento:\t %d-%d-%d\n", leitor[n].Dia,leitor[n].Mes,leitor[n].Ano);
+                    printf("Data de Nascimento:\t %d/%d/%d\n", leitor[n].Dia,leitor[n].Mes,leitor[n].Ano);
                     printf("Localidade:\t\t %s\n", leitor[n].Localidade);
                     printf("Contacto:\t\t %d\n\n", leitor[n].Contacto);
                 }
@@ -328,6 +338,7 @@ void listagens(){
 
 }
 void carregar_ficheiro(){
+        char estado_requisitado[12]= "requisitado";
         FILE *ficheiro;
         ficheiro = fopen("Biblioteca.txt", "r");
         fscanf(ficheiro, "\nNumero de Livros: %d\n",&nlivro);
@@ -335,43 +346,51 @@ void carregar_ficheiro(){
     for (int n = 0; n < nlivro; n++) {
         int n1=n+1;
         fscanf(ficheiro, "\nLivro%d:\n\n", &n1);
-        fscanf(ficheiro, "ISBN: %ld\n", &livro[n].ISBN);
+        fscanf(ficheiro, "ISBN: %s\n", livro[n].ISBN);
         fscanf(ficheiro, "Titulo: %s\n", livro[n].Titulo);
         fscanf(ficheiro, "Autor: %s\n", livro[n].Autor);
         fscanf(ficheiro, "Editora: %s\n", livro[n].Editora);
         fscanf(ficheiro, "Estado: %s\n", livro[n].Estado);
+        if(strcmp(livro[n].Estado, estado_requisitado) == 0){
+            fscanf(ficheiro, "Requisitado: %d/%d/%d\n", &livro[n].dia_requisitar,&livro[n].mes_requisitar,&livro[n].ano_requisitar);
+        }
     }
     for (int n = 0; n < nleitor; n++) {
         int n1=n+1;
         fscanf(ficheiro, "\nLeitor %d: ", &n1);
         fscanf(ficheiro, "Codigo_leitor: %d\n", &leitor[n].Codigo_leitor);
         fscanf(ficheiro, "Nome: %s\n", leitor[n].Nome);
-        fscanf(ficheiro, "Data de Nascimento: %d-%d-%d\n", &leitor[n].Dia,&leitor[n].Mes,&leitor[n].Ano);
+        fscanf(ficheiro, "Data de Nascimento: %d/%d/%d\n", &leitor[n].Dia,&leitor[n].Mes,&leitor[n].Ano);
         fscanf(ficheiro, "Localidade: %s\n", leitor[n].Localidade);
         fscanf(ficheiro, "Contacto: %d\n", &leitor[n].Contacto);
     }
     fclose(ficheiro);
 }
 void guardar_ficheiro(){
+            char estado_requisitado[12]= "requisitado";
             FILE *ficheiro;
             ficheiro = fopen("Biblioteca.txt", "w");
             fprintf(ficheiro, "\nNumero de Livros: %d\n",nlivro);
             fprintf(ficheiro, "\nNumero de Leitores: %d\n\n", nleitor);
         for (int n = 0; n < nlivro; n++) {
             fprintf(ficheiro, "\nLivro%d:\n\n", n + 1);
-            fprintf(ficheiro, "ISBN: %ld\n", livro[n].ISBN);
+            fprintf(ficheiro, "ISBN: %s\n", livro[n].ISBN);
             fprintf(ficheiro, "Titulo: %s\n", livro[n].Titulo);
             fprintf(ficheiro, "Autor: %s\n", livro[n].Autor);
             fprintf(ficheiro, "Editora: %s\n", livro[n].Editora);
             fprintf(ficheiro, "Estado: %s\n", livro[n].Estado);
+            if(strcmp(livro[n].Estado, estado_requisitado) == 0){
+                fprintf(ficheiro, "Requisitado: %d/%d/%d\n", livro[n].dia_requisitar,livro[n].mes_requisitar,livro[n].ano_requisitar);
+            }
         }
         for (int n = 0; n < nleitor; n++) {
             fprintf(ficheiro, "\nLeitor %d: \n\n", n + 1);
             fprintf(ficheiro, "Codigo_leitor: %d\n", leitor[n].Codigo_leitor);
             fprintf(ficheiro, "Nome: %s\n", leitor[n].Nome);
-            fprintf(ficheiro, "Data de Nascimento: %d-%d-%d\n", leitor[n].Dia,leitor[n].Mes,leitor[n].Ano);
+            fprintf(ficheiro, "Data de Nascimento: %d/%d/%d\n", leitor[n].Dia,leitor[n].Mes,leitor[n].Ano);
             fprintf(ficheiro, "Localidade: %s\n", leitor[n].Localidade);
             fprintf(ficheiro, "Contacto: %d\n", leitor[n].Contacto);
+
         }
         fclose(ficheiro);
 }
