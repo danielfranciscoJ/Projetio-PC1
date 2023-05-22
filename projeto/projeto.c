@@ -11,8 +11,9 @@
 #include <windows.h>
 
 
-#define NLIVROS 100
-#define NLEITORES 100
+#define NLIVROS 50
+#define NLEITORES 50
+#define NREQUISICOES 50
 
 
 void menu();
@@ -27,19 +28,19 @@ void carregar_ficheiro();
 void guardar_ficheiro();
 void sair();
 
-typedef struct {
+typedef struct {//Estrutura para os livros
     char ISBN[14]; //Pode armazenar até 13 dígitos incluindo '\0', (tem que ter ser char para poder guardar zeros a esquerda)
     char Titulo[50];
     char Autor[50];
     char Editora[50];
-    char Estado[20];
+    char Estado[13];//Pode armazenar as palavras, disponível, requisitado ou inutilizado + incluindo '\0'
     int dia_requisitar;
     int mes_requisitar;
     int ano_requisitar;
 }livro_t;
 livro_t livro[NLIVROS];
 
-typedef struct {
+typedef struct {//Estrutura para os leitores
     int Codigo_leitor;
     char Nome[50];
     int Dia;
@@ -50,8 +51,21 @@ typedef struct {
 }leitor_t;
 leitor_t leitor[NLEITORES];
 
+
+typedef struct {//Estruturas para guardar as requisicoes
+    int Codigo_leitor;
+    char ISBN[14];
+    int Dia;//Dia em que foi requisitado
+    int Mes;//Mes em que foi requisitado
+    int Ano;//Ano em que foi requisitado
+    char Estado_entrega[14];//Estado do livro depois de entregar
+}requisicoes_t;
+requisicoes_t requisicao[NREQUISICOES];
+
+
 int nlivro=0;
 int nleitor=0;
+int requisicoes_ativas=0;
 int nrequisicoes=0;
 
 
@@ -64,16 +78,16 @@ return 0;
 void menu(){
     int num=0;
     char estado_requisitado[12]= "requisitado";
-    nrequisicoes=0;
+    requisicoes_ativas=0;
     for(int i=0; i<nlivro;i++){
         if(strcmp(livro[i].Estado, estado_requisitado) == 0){
-            nrequisicoes++;
+            requisicoes_ativas++;
         }
     }
 
         printf("\t-- Gestao de Requisicoes de uma Biblioteca --\n\n");
         printf("Total de Livros:%d \t\t\t Total de Leitores:%d \n",nlivro,nleitor);
-        printf("Total de Requisicoes ativas:%d \n\n", nrequisicoes);
+        printf("Total de Requisicoes ativas:%d \n\n", requisicoes_ativas);
         printf("\t1 - Registar Livro \n");
         printf("\t2 - Registar Leitor \n");
         printf("\t3 - Requisitar Livro \n");
@@ -210,21 +224,22 @@ void registar_leitor(){
 
 }
 void requisitar_livro(){
+    char estado_requisitado[14]= "Nao devolvido";
     int leitor_verificar;
     printf("Digite o seu codigo de leitor!\n");
     fflush(stdin);
     scanf("%d", &leitor_verificar);
-    for(int n=0; n<nleitor;n++){
-        if(leitor[n].Codigo_leitor == leitor_verificar){
+    for(int i=0; i<nleitor;i++){
+        if(leitor[i].Codigo_leitor == leitor_verificar){
             printf("Codigo de Leitor valido!\n");
             printf("Digite o Titulo do livro!\n");
-            char titulo_livro[NLIVROS];
+            char titulo_livro[50];
             fflush(stdin);
             gets(titulo_livro);
             for(int n=0; n<nlivro; n++){
                 if(strcmp(titulo_livro, livro[n].Titulo) == 0){//Permite comparar alfabeticamente duas strings. Devolve 0 - se as duas strings forem alfabeticamente iguais
                     printf("Titulo existe!\n");
-                    char estado_disponivel[11]= "disponivel";
+                    char estado_disponivel[12]= "disponivel";
                     if(strcmp(livro[n].Estado, estado_disponivel) == 0){
                         printf("Esta disponivel\n");
                         printf("Insira a data da requisicao!\n");
@@ -237,6 +252,13 @@ void requisitar_livro(){
                         fflush(stdin);
                         printf("Ano:\n");
                         scanf("%d", &livro[n].ano_requisitar);
+                        requisicao[nrequisicoes].Codigo_leitor = leitor[i].Codigo_leitor;
+                        strcpy(requisicao[nrequisicoes].ISBN,livro[n].ISBN);
+                        requisicao[nrequisicoes].Dia = livro[n].dia_requisitar;
+                        requisicao[nrequisicoes].Mes = livro[n].mes_requisitar;
+                        requisicao[nrequisicoes].Ano = livro[n].ano_requisitar;
+                        strcpy(requisicao[nrequisicoes].Estado_entrega,estado_requisitado);
+                        nrequisicoes++;
                         strcpy(livro[n].Estado, "requisitado");//Permite copiar strOrigem para strDestino.
                         menu();
                     }else{
@@ -255,38 +277,62 @@ void requisitar_livro(){
 
 }
 void devolver_livro(){
+    char opcao;
     char isbn[14];
+    char estado_disponivel[12]= "disponivel";
     printf("Insira o ISBN do livro!\n");
     fflush(stdin);
     gets(isbn);
-
     for(int n=0; n<nlivro;n++){
-        if(strcmp(isbn, livro[n].ISBN) == 0){
+        if((strcmp(isbn, livro[n].ISBN) == 0) && (strcmp(estado_disponivel, livro[n].Estado) != 0)){
             printf("Livro devolvido!\n");
             strcpy(livro[n].Estado, "disponivel");
             int tempo_requisitar=calculo_data_requisitar(n);
             int tempo_atual=afixa_time();
-            printf("O livro foi requisitado durante %d dias!\n",tempo_atual-tempo_requisitar);
-            printf("Pressione alguma tecla para continuar!\n");
+            printf("O livro foi requisitado durante %d dias!\n\n",tempo_atual-tempo_requisitar);
+            printf("O livro esta inutilizavel?\n");
+            printf("Se sim, digite \"s\", se nao pressione qualquer tecla!\n");
+            fflush(stdin);
+            scanf("%c", &opcao);
+            switch(opcao){
+                case 's':
+                case 'S':
+                    for(int i=0; i<nrequisicoes;i++){
+                        if(strcmp(livro[n].ISBN, requisicao[i].ISBN) == 0){
+                            strcpy(requisicao[i].Estado_entrega, "inutilizavel");
+                            strcpy(livro[n].Estado,"inutilizavel");
+                        }
+                    }
+                break;
+                default:
+                     for(int i=0; i<nrequisicoes;i++){
+                        if(strcmp(livro[n].ISBN, requisicao[i].ISBN) == 0){
+                            strcpy(requisicao[i].Estado_entrega, "disponivel");
+                            strcpy(livro[n].Estado,"disponivel");
+                        }
+                    }
+                }
+            printf("Pressione alguma tecla para continuar!\n\n");
             getch();
             menu();
         }
-        printf("Nao existe nenhum livro com este ISBN!\n\n");
-        menu();
-
-        }
     }
+    printf("Dados introduzidos incorretamente!\n\n");
+    printf("Pressione alguma tecla para continuar!\n\n");
+    getch();
+    menu();
+}
 
 void listagens(){
-
     int num=0;
+    int codigo=0;
+    int variavel = 0;
         printf("\t-- Listagem --\n\n");
         printf("\t1 - Livro \n");
         printf("\t2 - Leitores \n");
         printf("\t3 - Livros Requisitados \n");
         printf("\t4 - As 10 ultimas requisicoes \n");
         printf("\t0 - Menu principal \n\n");
-
     do{
         fflush(stdin);
         printf("\t\tOPCAO: ");
@@ -294,7 +340,6 @@ void listagens(){
         printf("\n");
         switch(num){
             case 1:
-
                 for (int n = 0; n < nlivro; n++) {
                     printf("\nLivro%d:\n\n", n + 1);
                     printf("ISBN:\t\t %s\n", livro[n].ISBN);
@@ -307,9 +352,7 @@ void listagens(){
                 getch();
                 listagens();
             break;
-
             case 2:
-
                 for (int n = 0; n < nleitor; n++) {
                     printf("\nLeitor %d: \n\n", n + 1);
                     printf("Codigo_leitor:\t\t %d\n", leitor[n].Codigo_leitor);
@@ -323,9 +366,38 @@ void listagens(){
                 listagens();
             break;
             case 3:
+                for(int n=0; n<nrequisicoes;n++){
+                    printf("\nRequisicao %d \n\n", n+1);
+                    printf("Codigo de leitor: %d\n", requisicao[n].Codigo_leitor);
+                    printf("ISBN: %s\n", requisicao[n].ISBN);
+                    printf("Data de requisicao: %d/%d/%d\n", requisicao[n].Dia,requisicao[n].Mes,requisicao[n].Ano);
+                    printf("Estado da entrega: %s \n", requisicao[n].Estado_entrega);
+                }
+                printf("\n\n\tTotal de Requisicoes: %d \n\n", nrequisicoes);
+                printf("\nPressione uma tecla para continuar!\n\n");
+                getch();
                 listagens();
             break;
             case 4:
+
+                printf("Digite o seu codigo de leitor!\n");
+                fflush(stdin);
+                scanf("%d", &codigo);
+
+                for(int n=0; n<nrequisicoes;n++){
+                        if(codigo == requisicao[n].Codigo_leitor){
+                            if(variavel == 0){//Variavel serve para que este texto so aparece 1 vez
+                                printf("\nUltimas 10 Requisicoes:\n");
+                                printf("Codigo de leitor: %d\n\n", requisicao[n].Codigo_leitor);
+                            }
+                            printf("ISBN: %s\n", requisicao[n].ISBN);
+                            printf("Data de requisicao: %d/%d/%d\n", requisicao[n].Dia,requisicao[n].Mes,requisicao[n].Ano);
+                            printf("Estado da entrega: %s \n\n", requisicao[n].Estado_entrega);
+                        }
+                variavel =1;
+                }
+                printf("\nPressione uma tecla para continuar!\n\n");
+                getch();
                 listagens();
             break;
             case 0:
@@ -338,14 +410,16 @@ void listagens(){
 
 }
 void carregar_ficheiro(){
+
         char estado_requisitado[12]= "requisitado";
         FILE *ficheiro;
         ficheiro = fopen("Biblioteca.txt", "r");
         fscanf(ficheiro, "\nNumero de Livros: %d\n",&nlivro);
-        fscanf(ficheiro, "\nNumero de Leitores: %d\n\n", &nleitor);
+        fscanf(ficheiro, "Numero de Leitores: %d\n", &nleitor);
+        fscanf(ficheiro, "Numero de Requisicoes: %d\n\n", &nrequisicoes);
     for (int n = 0; n < nlivro; n++) {
         int n1=n+1;
-        fscanf(ficheiro, "\nLivro%d:\n\n", &n1);
+        fscanf(ficheiro, "\nLivro %d:\n\n", &n1);
         fscanf(ficheiro, "ISBN: %s\n", livro[n].ISBN);
         fscanf(ficheiro, "Titulo: %s\n", livro[n].Titulo);
         fscanf(ficheiro, "Autor: %s\n", livro[n].Autor);
@@ -364,35 +438,51 @@ void carregar_ficheiro(){
         fscanf(ficheiro, "Localidade: %s\n", leitor[n].Localidade);
         fscanf(ficheiro, "Contacto: %d\n", &leitor[n].Contacto);
     }
+    for(int n=0; n<nrequisicoes;n++){
+        int n1=n+1;
+        fscanf(ficheiro, "\nRequisicao %d \n\n", &n1);
+        fscanf(ficheiro, "Codigo de leitor: %d\n", &requisicao[n].Codigo_leitor);
+        fscanf(ficheiro, "ISBN: %s\n", requisicao[n].ISBN);
+        fscanf(ficheiro, "Data de requisicao: %d/%d/%d\n", &requisicao[n].Dia,&requisicao[n].Mes,&requisicao[n].Ano);
+        fscanf(ficheiro, "Estado da entrega: %s \n", requisicao[n].Estado_entrega);
+    }
     fclose(ficheiro);
 }
 void guardar_ficheiro(){
-            char estado_requisitado[12]= "requisitado";
-            FILE *ficheiro;
-            ficheiro = fopen("Biblioteca.txt", "w");
-            fprintf(ficheiro, "\nNumero de Livros: %d\n",nlivro);
-            fprintf(ficheiro, "\nNumero de Leitores: %d\n\n", nleitor);
-        for (int n = 0; n < nlivro; n++) {
-            fprintf(ficheiro, "\nLivro%d:\n\n", n + 1);
-            fprintf(ficheiro, "ISBN: %s\n", livro[n].ISBN);
-            fprintf(ficheiro, "Titulo: %s\n", livro[n].Titulo);
-            fprintf(ficheiro, "Autor: %s\n", livro[n].Autor);
-            fprintf(ficheiro, "Editora: %s\n", livro[n].Editora);
-            fprintf(ficheiro, "Estado: %s\n", livro[n].Estado);
-            if(strcmp(livro[n].Estado, estado_requisitado) == 0){
-                fprintf(ficheiro, "Requisitado: %d/%d/%d\n", livro[n].dia_requisitar,livro[n].mes_requisitar,livro[n].ano_requisitar);
-            }
-        }
-        for (int n = 0; n < nleitor; n++) {
-            fprintf(ficheiro, "\nLeitor %d: \n\n", n + 1);
-            fprintf(ficheiro, "Codigo_leitor: %d\n", leitor[n].Codigo_leitor);
-            fprintf(ficheiro, "Nome: %s\n", leitor[n].Nome);
-            fprintf(ficheiro, "Data de Nascimento: %d/%d/%d\n", leitor[n].Dia,leitor[n].Mes,leitor[n].Ano);
-            fprintf(ficheiro, "Localidade: %s\n", leitor[n].Localidade);
-            fprintf(ficheiro, "Contacto: %d\n", leitor[n].Contacto);
 
+        char estado_requisitado[12]= "requisitado";
+        FILE *ficheiro;
+        ficheiro = fopen("Biblioteca.txt", "w");
+        fprintf(ficheiro, "\nNumero de Livros: %d\n",nlivro);
+        fprintf(ficheiro, "Numero de Leitores: %d\n", nleitor);
+        fprintf(ficheiro, "Numero de Requisicoes: %d\n\n", nrequisicoes);
+    for (int n = 0; n < nlivro; n++) {
+        fprintf(ficheiro, "\nLivro %d:\n\n", n + 1);
+        fprintf(ficheiro, "ISBN: %s\n", livro[n].ISBN);
+        fprintf(ficheiro, "Titulo: %s\n", livro[n].Titulo);
+        fprintf(ficheiro, "Autor: %s\n", livro[n].Autor);
+        fprintf(ficheiro, "Editora: %s\n", livro[n].Editora);
+        fprintf(ficheiro, "Estado: %s\n", livro[n].Estado);
+        if(strcmp(livro[n].Estado, estado_requisitado) == 0){
+            fprintf(ficheiro, "Requisitado: %d/%d/%d\n", livro[n].dia_requisitar,livro[n].mes_requisitar,livro[n].ano_requisitar);
         }
-        fclose(ficheiro);
+    }
+    for (int n = 0; n < nleitor; n++) {
+        fprintf(ficheiro, "\nLeitor %d: \n\n", n + 1);
+        fprintf(ficheiro, "Codigo_leitor: %d\n", leitor[n].Codigo_leitor);
+        fprintf(ficheiro, "Nome: %s\n", leitor[n].Nome);
+        fprintf(ficheiro, "Data de Nascimento: %d/%d/%d\n", leitor[n].Dia,leitor[n].Mes,leitor[n].Ano);
+        fprintf(ficheiro, "Localidade: %s\n", leitor[n].Localidade);
+        fprintf(ficheiro, "Contacto: %d\n", leitor[n].Contacto);
+    }
+    for(int n=0; n<nrequisicoes;n++){
+        fprintf(ficheiro, "\nRequisicao %d \n\n", n+1);
+        fprintf(ficheiro, "Codigo de leitor: %d\n", requisicao[n].Codigo_leitor);
+        fprintf(ficheiro, "ISBN: %s\n", requisicao[n].ISBN);
+        fprintf(ficheiro, "Data de requisicao: %d/%d/%d\n", requisicao[n].Dia,requisicao[n].Mes,requisicao[n].Ano);
+        fprintf(ficheiro, "Estado da entrega: %s \n", requisicao[n].Estado_entrega);
+    }
+    fclose(ficheiro);
 }
 void sair(){
     char opcao;

@@ -1,48 +1,75 @@
 
-Numero de Livros: 3
-
+Numero de Livros: 5
 Numero de Leitores: 2
+Numero de Requisicoes: 2
 
 
-Livro1:
+Livro 1:
 
-ISBN: 0123456789123
+ISBN: 12345
 Titulo: titulo1
 Autor: autor1
 Editora: editora1
-Estado: requisitado
-Requisitado: 15/6/2022
+Estado: disponivel
 
-Livro2:
+Livro 2:
 
-ISBN: 9876543210123
+ISBN: 123456
 Titulo: titulo2
 Autor: autor2
 Editora: editora2
-Estado: requisitado
-Requisitado: 12/12/2022
+Estado: disponivel
 
-Livro3:
+Livro 3:
 
-ISBN: 12345
+ISBN: 1234567
 Titulo: titulo3
 Autor: autor3
 Editora: editora3
-Estado: requisitado
-Requisitado: 22/2/1223
+Estado: disponivel
+
+Livro 4:
+
+ISBN: 12345678
+Titulo: titulo4
+Autor: autor4
+Editora: editora4
+Estado: inutilizavel
+
+Livro 5:
+
+ISBN: 0987654321
+Titulo: titulo5
+Autor: autor5
+Editora: editora5
+Estado: disponivel
 
 Leitor 1: 
 
-Codigo_leitor: 12345
+Codigo_leitor: 1
 Nome: diogo
-Data de Nascimento: 5/2/2023
+Data de Nascimento: 12/12/2000
 Localidade: leiria
-Contacto: 24124141
+Contacto: 918402249
 
 Leitor 2: 
 
-Codigo_leitor: 54321
-Nome: diogo
-Data de Nascimento: 11/222/2222
+Codigo_leitor: 2
+Nome: joao
+Data de Nascimento: 12/12/2002
 Localidade: leiria
-Contacto: 124124
+Contacto: 11241241
+
+Requisicao 1 
+
+Codigo de leitor: 2
+ISBN: 123456
+Data de requisicao: 11/11/2020
+Estado da entrega: disponivel 
+
+Requisicao 2 
+
+Codigo de leitor: 2
+ISBN: 12345678
+Data de requisicao: 11/11/2021
+Estado da entrega: inutilizavel 
