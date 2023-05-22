@@ -1,6 +1,6 @@
 /*Realizado por:
 -Diogo Cravo
--*inserir_nome*
+-Daniel Jesus
 */
 #include <stdio.h>
 #include <stdlib.h>
@@ -26,6 +26,7 @@ int afixa_time();
 void carregar_ficheiro();
 void guardar_ficheiro();
 void sair();
+void listagem_req();
 
 typedef struct {
     char ISBN[14]; //Pode armazenar até 13 dígitos incluindo '\0', (tem que ter ser char para poder guardar zeros a esquerda)
@@ -278,7 +279,6 @@ void devolver_livro(){
     }
 
 void listagens(){
-
     int num=0;
         printf("\t-- Listagem --\n\n");
         printf("\t1 - Livro \n");
@@ -323,6 +323,8 @@ void listagens(){
                 listagens();
             break;
             case 3:
+                listagem_req();
+
                 listagens();
             break;
             case 4:
@@ -337,6 +339,25 @@ void listagens(){
     }while(num!=1 && num!=2 && num!=3 && num!=4 && num!=0);
 
 }
+
+void listagem_req(){
+    int leitor_verificar, leitorErro = 1;
+    printf("\nIntroduza o codigo de leitor a selecionar: ");
+    scanf("%d", &leitor_verificar);
+    for(int n=0; n<nleitor && leitorErro != 0 ;n++){
+        if(leitor[n].Codigo_leitor == leitor_verificar){
+            leitorErro = 0;
+            printf("Codigo de Leitor valido!\n");
+        } else {
+            leitorErro = 1;
+        }
+    }
+    if (leitorErro == 1) {
+        printf("\nIntroduziu um codigo errado\n\n");
+        listagens();
+    }
+}
+
 void carregar_ficheiro(){
         char estado_requisitado[12]= "requisitado";
         FILE *ficheiro;
