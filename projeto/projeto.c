@@ -1,7 +1,10 @@
-/*Realizado por:
+/*
+Projeto PC1
+Realizado por:
 -Diogo Cravo
 -*inserir_nome*
 */
+//
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -514,12 +517,13 @@ int afixa_time(){//Calcula todos os dias desde a data 1/1/1 ate a data atual
     int i=0;
     ano_atual=ano_atual-1;
     if(ano_atual%4 ==0){//Verifica se o ano anterior e bissexto ou nao.
-        total_dias_atual+=ano_atual*0.75*365+ano_atual*0.25*366; //Calcula todos os dias desde 1/1/1 ate ao dia 31/12 do ano anterior
+        //Esta conta apesar de ser (int) pode ter na conta "0.75" e "0.25", porque como o ano e bissexto a conta nunca vai conter virgulas, logo nao se vai perder informacao.
+        total_dias_atual+=ano_atual*0.75*365+ano_atual*0.25*366; //Calcula todos os dias desde 1/1/1 ate ao dia 31/12 do ano anterior.
     }else{//Se nao for bissexto
-        for(i=0; ano_atual%4!=0;ano_atual--){
+        for(i=0; ano_atual%4!=0;ano_atual--){//Remove anos ate que esta num ano bissexto
             i++;
         }
-        total_dias_atual+=ano_atual*0.75*365+ano_atual*0.25*366+i*365;//Calcula todos os dias desde 1/1/1 ate ao dia 31/12 do ano anterior
+        total_dias_atual+=ano_atual*0.75*365+ano_atual*0.25*366+i*365;//Calcula todos os dias desde 1/1/1 ate ao dia 31/12 do ano anterior e depois soma os anos removidos e multiplica por 365 porque sao anos nao bissextos
     }
     ano_atual+=i+1;//Soma ao ano os anos que foram removidos no ciclo for, mais 1 que foi removido no inicio. Para verificar se o ano atual e bissexto ou nao
     if (ano_atual % 4 == 0) {//Verifica se o ano atual e bissexto
