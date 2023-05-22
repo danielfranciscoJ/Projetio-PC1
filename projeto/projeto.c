@@ -2,7 +2,7 @@
 Projeto PC1
 Realizado por:
 -Diogo Cravo
--*inserir_nome*
+-Daniel Jesus
 */
 //
 #include <stdio.h>
@@ -30,6 +30,7 @@ int afixa_time();
 void carregar_ficheiro();
 void guardar_ficheiro();
 void sair();
+void listagem_req();
 
 typedef struct {//Estrutura para os livros
     char ISBN[14]; //Pode armazenar até 13 dígitos incluindo '\0', (tem que ter ser char para poder guardar zeros a esquerda)
@@ -412,6 +413,25 @@ void listagens(){
     }while(num!=1 && num!=2 && num!=3 && num!=4 && num!=0);
 
 }
+
+void listagem_req(){
+    int leitor_verificar, leitorErro = 1;
+    printf("\nIntroduza o codigo de leitor a selecionar: ");
+    scanf("%d", &leitor_verificar);
+    for(int n=0; n<nleitor && leitorErro != 0 ;n++){
+        if(leitor[n].Codigo_leitor == leitor_verificar){
+            leitorErro = 0;
+            printf("Codigo de Leitor valido!\n");
+        } else {
+            leitorErro = 1;
+        }
+    }
+    if (leitorErro == 1) {
+        printf("\nIntroduziu um codigo errado\n\n");
+        listagens();
+    }
+}
+
 void carregar_ficheiro(){
 
         char estado_requisitado[12]= "requisitado";
@@ -527,7 +547,7 @@ int afixa_time(){//Calcula todos os dias desde a data 1/1/1 ate a data atual
     }
     ano_atual+=i+1;//Soma ao ano os anos que foram removidos no ciclo for, mais 1 que foi removido no inicio. Para verificar se o ano atual e bissexto ou nao
     if (ano_atual % 4 == 0) {//Verifica se o ano atual e bissexto
-        dias_mes[1] = 29; //Modifica o vetor de index 1 para 29 devido aos anos bisextos
+        dias_mes[1] = 29; //Atribui valor de 29 dias ao mes de fevereiro
     }
     for (i = 0; i < mes_atual - 1; i++) {//Soma os dias dos meses.
         total_dias_atual += dias_mes[i];
@@ -556,7 +576,7 @@ int calculo_data_requisitar(int n){
     }
     ano+=i+1;
     if (ano % 4 == 0) {//Ano bissexto
-        dias_mes[1] = 29;
+        dias_mes[1] = 29;//Atribui valor de 29 dias ao mes de fevereiro
     }
     for (i = 0; i < mes - 1; i++) {
         total_dias_requisitar += dias_mes[i];
