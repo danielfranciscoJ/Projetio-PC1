@@ -1,9 +1,6 @@
 Coisas que faltam no programa.
 
--Associar o leitor à requisicao
--Acrescentar Livro inutilizado
 Listagem:
--Listagem dos livros já requisitados e no final a quantidade total desses livros.
 -▪ Listagem das 10 últimas requisições efetuadas por um determinado leitor. 
 
 
