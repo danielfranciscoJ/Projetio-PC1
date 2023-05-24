@@ -74,6 +74,10 @@ int nrequisicoes=0;
 
 
 int main(){
+    int i;
+    for (i = 0; i < NLEITORES; i++) {
+        leitor[i].livrosReq = 0;
+    }
     carregar_ficheiro();
     menu();
 
@@ -231,9 +235,7 @@ void requisitar_livro(){
     char estado_requisitado[14]= "Nao devolvido";
     int leitor_verificar;
     int i;
-    for (i = 0; i < NLEITORES; i++) {
-        leitor[i].livrosReq = 0;
-    }
+
     printf("Digite o seu codigo de leitor!\n");
     fflush(stdin);
     scanf("%d", &leitor_verificar);
