@@ -51,6 +51,7 @@ typedef struct {//Estrutura para os leitores
     int Ano;
     char Localidade[50];
     int Contacto;
+    int livrosReq;
 }leitor_t;
 leitor_t leitor[NLEITORES];
 
@@ -229,10 +230,14 @@ void registar_leitor(){
 void requisitar_livro(){
     char estado_requisitado[14]= "Nao devolvido";
     int leitor_verificar;
+    int i;
+    for (i = 0; i < NLEITORES; i++) {
+        leitor[i].livrosReq = 0;
+    }
     printf("Digite o seu codigo de leitor!\n");
     fflush(stdin);
     scanf("%d", &leitor_verificar);
-    for(int i=0; i<nleitor;i++){
+    for(i=0; i<nleitor;i++){
         if(leitor[i].Codigo_leitor == leitor_verificar){
             printf("Codigo de Leitor valido!\n");
             printf("Digite o Titulo do livro!\n");
@@ -262,6 +267,7 @@ void requisitar_livro(){
                         requisicao[nrequisicoes].Ano = livro[n].ano_requisitar;
                         strcpy(requisicao[nrequisicoes].Estado_entrega,estado_requisitado);
                         nrequisicoes++;
+                        leitor[i].livrosReq++;
                         strcpy(livro[n].Estado, "requisitado");//Permite copiar strOrigem para strDestino.
                         menu();
                     }else{
@@ -330,6 +336,7 @@ void listagens(){
     int num=0;
     int codigo=0;
     int variavel = 0;
+    int semReq = 0;
         printf("\t-- Listagem --\n\n");
         printf("\t1 - Livro \n");
         printf("\t2 - Leitores \n");
@@ -386,18 +393,31 @@ void listagens(){
                 printf("Digite o seu codigo de leitor!\n");
                 fflush(stdin);
                 scanf("%d", &codigo);
-
+                int numLeitor;
                 for(int n=0; n<nrequisicoes;n++){
-                        if(codigo == requisicao[n].Codigo_leitor){
-                            if(variavel == 0){//Variavel serve para que este texto so aparece 1 vez
-                                printf("\nUltimas 10 Requisicoes:\n");
-                                printf("Codigo de leitor: %d\n\n", requisicao[n].Codigo_leitor);
-                            }
-                            printf("ISBN: %s\n", requisicao[n].ISBN);
-                            printf("Data de requisicao: %d/%d/%d\n", requisicao[n].Dia,requisicao[n].Mes,requisicao[n].Ano);
-                            printf("Estado da entrega: %s \n\n", requisicao[n].Estado_entrega);
+                    if(codigo == requisicao[n].Codigo_leitor){
+                        if(variavel == 0){//Variavel serve para que este texto so aparece 1 vez
+                            printf("\nUltimas 10 Requisicoes:\n");
+                            printf("Codigo de leitor: %d\n\n", requisicao[n].Codigo_leitor);
                         }
-                variavel =1;
+                        printf("ISBN: %s\n", requisicao[n].ISBN);
+                        printf("Data de requisicao: %d/%d/%d\n", requisicao[n].Dia,requisicao[n].Mes,requisicao[n].Ano);
+                        printf("Estado da entrega: %s \n\n", requisicao[n].Estado_entrega);
+                    } else {
+                        for (int i = 0; i < nleitor; i++){              //Descobre o leitor associado ao codigo
+                            if (leitor[i].Codigo_leitor == codigo) {
+                                numLeitor = i;
+                            }
+                        }
+                        if (leitor[numLeitor].livrosReq == 0){          //Verifica se o leitor requisitou algum livro
+                            semReq = 1;
+                        }
+                    }
+                    variavel =1;
+
+                }
+                if (semReq == 1){
+                    printf("\nErro - Introduza um leitor com livros requisitados!\n");
                 }
                 printf("\nPressione uma tecla para continuar!\n\n");
                 getch();
