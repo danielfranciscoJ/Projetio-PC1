@@ -8,7 +8,6 @@ Realizado por:
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
 #include <time.h>
 #include <conio.h>
 #include <windows.h>
@@ -24,12 +23,13 @@ void registar_livro();
 void registar_leitor();
 void requisitar_livro();
 void devolver_livro();
-void listagens();
-int calculo_data_requisitar(int);
-int afixa_time();
+void exibir_munu_listagens();
+void requisitar_ultimas_10();
+int calcular_dias_atual();
+int calcular_dias_requisicao(int);
 void carregar_ficheiro();
 void guardar_ficheiro();
-void sair();
+void desligar_programa();
 void listagem_req();
 
 typedef struct {//Estrutura para os livros
@@ -118,10 +118,10 @@ void menu(){
                 devolver_livro();
             break;
             case 5:
-                listagens();
+                exibir_munu_listagens();
             break;
             case 0:
-                sair();
+                desligar_programa();
             break;
             default:
                 printf("Opcao invalida. Escolha uma do menu!\n\n");
@@ -228,7 +228,7 @@ void registar_leitor(){
 
 }
 void requisitar_livro(){
-    char estado_requisitado[14]= "Nao devolvido";
+    char estado_requisitado[12]= "requisitado";
     int leitor_verificar;
     printf("Digite o seu codigo de leitor!\n");
     fflush(stdin);
@@ -291,8 +291,8 @@ void devolver_livro(){
         if((strcmp(isbn, livro[n].ISBN) == 0) && (strcmp(estado_disponivel, livro[n].Estado) != 0)){
             printf("Livro devolvido!\n");
             strcpy(livro[n].Estado, "disponivel");
-            int tempo_requisitar=calculo_data_requisitar(n);
-            int tempo_atual=afixa_time();
+            int tempo_requisitar=calcular_dias_requisicao(n);
+            int tempo_atual=calcular_dias_atual();
             printf("O livro foi requisitado durante %d dias!\n\n",tempo_atual-tempo_requisitar);
             printf("O livro esta inutilizavel?\n");
             printf("Se sim, digite \"s\", se nao pressione qualquer tecla!\n");
@@ -327,16 +327,14 @@ void devolver_livro(){
     menu();
 }
 
-void listagens(){
+void exibir_munu_listagens(){
     int num=0;
-    int codigo=0;
-    int variavel = 0;
-        printf("\t-- Listagem --\n\n");
-        printf("\t1 - Livro \n");
-        printf("\t2 - Leitores \n");
-        printf("\t3 - Livros Requisitados \n");
-        printf("\t4 - As 10 ultimas requisicoes \n");
-        printf("\t0 - Menu principal \n\n");
+    printf("\t-- Listagem --\n\n");
+    printf("\t1 - Livro \n");
+    printf("\t2 - Leitores \n");
+    printf("\t3 - Livros Requisitados \n");
+    printf("\t4 - As 10 ultimas requisicoes \n");
+    printf("\t0 - Menu principal \n\n");
     do{
         fflush(stdin);
         printf("\t\tOPCAO: ");
@@ -354,7 +352,7 @@ void listagens(){
                 }
                 printf("\nPressione uma tecla para continuar!\n\n");
                 getch();
-                listagens();
+                exibir_munu_listagens();
             break;
             case 2:
                 for (int n = 0; n < nleitor; n++) {
@@ -367,7 +365,7 @@ void listagens(){
                 }
                 printf("\nPressione uma tecla para continuar!\n\n");
                 getch();
-                listagens();
+                exibir_munu_listagens();
             break;
             case 3:
                 for(int n=0; n<nrequisicoes;n++){
@@ -380,29 +378,10 @@ void listagens(){
                 printf("\n\n\tTotal de Requisicoes: %d \n\n", nrequisicoes);
                 printf("\nPressione uma tecla para continuar!\n\n");
                 getch();
-                listagens();
+                exibir_munu_listagens();
             break;
             case 4:
-
-                printf("Digite o seu codigo de leitor!\n");
-                fflush(stdin);
-                scanf("%d", &codigo);
-
-                for(int n=0; n<nrequisicoes;n++){
-                        if(codigo == requisicao[n].Codigo_leitor){
-                            if(variavel == 0){//Variavel serve para que este texto so aparece 1 vez
-                                printf("\nUltimas 10 Requisicoes:\n");
-                                printf("Codigo de leitor: %d\n\n", requisicao[n].Codigo_leitor);
-                            }
-                            printf("ISBN: %s\n", requisicao[n].ISBN);
-                            printf("Data de requisicao: %d/%d/%d\n", requisicao[n].Dia,requisicao[n].Mes,requisicao[n].Ano);
-                            printf("Estado da entrega: %s \n\n", requisicao[n].Estado_entrega);
-                        }
-                variavel =1;
-                }
-                printf("\nPressione uma tecla para continuar!\n\n");
-                getch();
-                listagens();
+                requisitar_ultimas_10();
             break;
             case 0:
                 menu();
@@ -428,9 +407,49 @@ void listagem_req(){
     }
     if (leitorErro == 1) {
         printf("\nIntroduziu um codigo errado\n\n");
-        listagens();
+        exibir_munu_listagens();
     }
 }
+
+void requisitar_ultimas_10(){
+    int n=0;
+    int codigo=0;
+    int variavel = 0;
+    int nrequisicoes_por_leitor = 0;
+    int num_requisicoes;
+
+    printf("Digite o seu codigo de leitor!\n");
+    fflush(stdin);
+    scanf("%d", &codigo);
+    if(codigo == requisicao[n].Codigo_leitor){
+        for(int n=0; n<nrequisicoes;n++){//For para saber quantas requisicoes o leitor ja realizou
+            nrequisicoes_por_leitor++;
+        }
+        num_requisicoes=nrequisicoes_por_leitor;//E necessario passar o valor das requisicoes para outra variavel porque depois quanto tiver a decrementar no ciclo for o valor tambem ira decrementar na condicao dentro do ciclo for o que nao e pretendido.
+    for(int n=0; n<num_requisicoes;n++){
+        nrequisicoes_por_leitor--;
+        if(nrequisicoes_por_leitor<10){
+            if(variavel == 0){//Variavel serve para que este texto so aparece 1 vez
+                printf("\nUltimas 10 Requisicoes:\n");
+                printf("Codigo de leitor: %d\n\n", requisicao[n].Codigo_leitor);
+                variavel =1;
+            }
+            printf("ISBN: %s\n", requisicao[n].ISBN);
+            printf("Data de requisicao: %d/%d/%d\n", requisicao[n].Dia,requisicao[n].Mes,requisicao[n].Ano);
+            printf("Estado da entrega: %s \n\n", requisicao[n].Estado_entrega);
+
+        }
+
+    }
+    variavel =0;
+    }else{
+    printf("Leitor nao registado!\n");
+    }
+    printf("\nPressione uma tecla para continuar!\n\n");
+    getch();
+    exibir_munu_listagens();
+}
+
 
 void carregar_ficheiro(){
 
@@ -507,7 +526,7 @@ void guardar_ficheiro(){
     }
     fclose(ficheiro);
 }
-void sair(){
+void desligar_programa(){
     char opcao;
     fflush(stdin);
     printf("\nDeseja sair?\n");
@@ -525,7 +544,7 @@ void sair(){
     }
  }
 
-int afixa_time(){//Calcula todos os dias desde a data 1/1/1 ate a data atual
+int calcular_dias_atual(){//Calcula todos os dias desde a data 1/1/1 ate a data atual
     time_t tempo;
     struct tm *timeinfo;
     time(&tempo);
@@ -556,8 +575,7 @@ int afixa_time(){//Calcula todos os dias desde a data 1/1/1 ate a data atual
     return total_dias_atual;
 
 }
-
-int calculo_data_requisitar(int n){
+int calcular_dias_requisicao(int n){
     printf("Data de requisicao %d/%d/%d\n",livro[n].dia_requisitar,livro[n].mes_requisitar,livro[n].ano_requisitar);
     int dias_mes[] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
     int total_dias_requisitar = 0;

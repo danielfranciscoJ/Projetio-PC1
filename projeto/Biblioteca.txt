@@ -1,7 +1,7 @@
 
 Numero de Livros: 5
 Numero de Leitores: 2
-Numero de Requisicoes: 2
+Numero de Requisicoes: 14
 
 
 Livro 1:
@@ -34,42 +34,126 @@ ISBN: 12345678
 Titulo: titulo4
 Autor: autor4
 Editora: editora4
-Estado: inutilizavel
+Estado: disponivel
 
 Livro 5:
 
-ISBN: 0987654321
-Titulo: titulo5
-Autor: autor5
-Editora: editora5
+ISBN: 123456789
+Titulo: titulo4
+Autor: autor4
+Editora: editora4
 Estado: disponivel
 
 Leitor 1: 
 
 Codigo_leitor: 1
-Nome: diogo
-Data de Nascimento: 12/12/2000
+Nome: fernando
+Data de Nascimento: 10/10/2000
 Localidade: leiria
 Contacto: 918402249
 
 Leitor 2: 
 
 Codigo_leitor: 2
-Nome: joao
-Data de Nascimento: 12/12/2002
+Nome: diogo
+Data de Nascimento: 20/10/2000
 Localidade: leiria
-Contacto: 11241241
+Contacto: 918402249
 
 Requisicao 1 
 
 Codigo de leitor: 2
 ISBN: 123456
-Data de requisicao: 11/11/2020
+Data de requisicao: 1/11/2020
 Estado da entrega: disponivel 
 
 Requisicao 2 
 
 Codigo de leitor: 2
 ISBN: 12345678
+Data de requisicao: 2/11/2021
+Estado da entrega: disponivel 
+
+Requisicao 3 
+
+Codigo de leitor: 2
+ISBN: 1234567
+Data de requisicao: 3/1/1
+Estado da entrega: disponivel 
+
+Requisicao 4 
+
+Codigo de leitor: 2
+ISBN: 123456
+Data de requisicao: 4/11/2020
+Estado da entrega: disponivel 
+
+Requisicao 5 
+
+Codigo de leitor: 2
+ISBN: 12345678
+Data de requisicao: 5/11/2021
+Estado da entrega: disponivel 
+
+Requisicao 6 
+
+Codigo de leitor: 2
+ISBN: 1234567
+Data de requisicao: 6/1/1
+Estado da entrega: disponivel 
+
+Requisicao 7 
+
+Codigo de leitor: 2
+ISBN: 123456
+Data de requisicao: 7/11/2020
+Estado da entrega: disponivel 
+
+Requisicao 8 
+
+Codigo de leitor: 2
+ISBN: 12345678
+Data de requisicao: 8/11/2021
+Estado da entrega: disponivel 
+
+Requisicao 9 
+
+Codigo de leitor: 2
+ISBN: 1234567
+Data de requisicao: 9/1/1
+Estado da entrega: disponivel 
+
+Requisicao 10 
+
+Codigo de leitor: 2
+ISBN: 123456
+Data de requisicao: 10/11/2020
+Estado da entrega: disponivel 
+
+Requisicao 11 
+
+Codigo de leitor: 2
+ISBN: 12345678
 Data de requisicao: 11/11/2021
-Estado da entrega: inutilizavel 
+Estado da entrega: disponivel 
+
+Requisicao 12 
+
+Codigo de leitor: 2
+ISBN: 1234567
+Data de requisicao: 12/1/1
+Estado da entrega: disponivel 
+
+Requisicao 13 
+
+Codigo de leitor: 1
+ISBN: 1234567
+Data de requisicao: 12/1/1
+Estado da entrega: disponivel 
+
+Requisicao 14 
+
+Codigo de leitor: 1
+ISBN: 12345678
+Data de requisicao: 12/1/1
+Estado da entrega: disponivel 

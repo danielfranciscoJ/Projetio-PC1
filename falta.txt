@@ -1,8 +1,7 @@
 Coisas que faltam no programa.
 
 Listagem:
--▪ Listagem das 10 últimas requisições efetuadas por um determinado leitor. 
-
+-Mudar o ficheiro para binario
 
 -Deverão ser efetuadas todas as validações e proteções necessárias ao correto
 funcionamento do programa. ex: em data meses_max 12, dias_max 31, ...
