@@ -5,9 +5,3 @@ Listagem:
 -Mudar o ficheiro para binario
 
 
--Deverão ser efetuadas todas as validações e proteções necessárias ao correto
-funcionamento do programa. ex: em data meses_max 12, dias_max 31, ...
-
--comentarios nos comandos,
-
-
