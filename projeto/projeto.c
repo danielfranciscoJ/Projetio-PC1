@@ -2,7 +2,7 @@
 Projeto PC1
 Realizado por:
 -Diogo Cravo
--*inserir_nome*
+-Daniel Jesus
 */
 
 #include <stdio.h>
