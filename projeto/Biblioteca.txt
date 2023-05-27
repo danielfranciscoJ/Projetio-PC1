@@ -1,7 +1,7 @@
 
 Numero de Livros: 5
-Numero de Leitores: 2
-Numero de Requisicoes: 14
+Numero de Leitores: 5
+Numero de Requisicoes: 15
 
 
 Livro 1:
@@ -18,7 +18,7 @@ ISBN: 123456
 Titulo: titulo2
 Autor: autor2
 Editora: editora2
-Estado: disponivel
+Estado: inutilizavel
 
 Livro 3:
 
@@ -60,12 +60,36 @@ Data de Nascimento: 20/10/2000
 Localidade: leiria
 Contacto: 918402249
 
+Leitor 3: 
+
+Codigo_leitor: 3
+Nome: joao
+Data de Nascimento: 3/3/1989
+Localidade: leiria
+Contacto: 12414
+
+Leitor 4: 
+
+Codigo_leitor: 4
+Nome: manuel
+Data de Nascimento: 4/2/1999
+Localidade: leiria
+Contacto: 918402244
+
+Leitor 5: 
+
+Codigo_leitor: 8
+Nome: kiko
+Data de Nascimento: 11/4/2000
+Localidade: leiria
+Contacto: 918402249
+
 Requisicao 1 
 
 Codigo de leitor: 2
 ISBN: 123456
 Data de requisicao: 1/11/2020
-Estado da entrega: disponivel 
+Estado da entrega: inutilizavel 
 
 Requisicao 2 
 
@@ -86,7 +110,7 @@ Requisicao 4
 Codigo de leitor: 2
 ISBN: 123456
 Data de requisicao: 4/11/2020
-Estado da entrega: disponivel 
+Estado da entrega: inutilizavel 
 
 Requisicao 5 
 
@@ -107,7 +131,7 @@ Requisicao 7
 Codigo de leitor: 2
 ISBN: 123456
 Data de requisicao: 7/11/2020
-Estado da entrega: disponivel 
+Estado da entrega: inutilizavel 
 
 Requisicao 8 
 
@@ -128,7 +152,7 @@ Requisicao 10
 Codigo de leitor: 2
 ISBN: 123456
 Data de requisicao: 10/11/2020
-Estado da entrega: disponivel 
+Estado da entrega: inutilizavel 
 
 Requisicao 11 
 
@@ -157,3 +181,10 @@ Codigo de leitor: 1
 ISBN: 12345678
 Data de requisicao: 12/1/1
 Estado da entrega: disponivel 
+
+Requisicao 15 
+
+Codigo de leitor: 2
+ISBN: 123456
+Data de requisicao: 31/2/2001
+Estado da entrega: inutilizavel 
