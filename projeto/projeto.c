@@ -344,68 +344,106 @@ void requisitar_livro(){
     Entradas: Nao tem
     Saidas: Nao tem
 */
-    char estado_requisitado[12]= "requisitado";
-    int leitor_verificar;
-    int i;
+    char isbn[14];
+    int verificar_data = 0;
+    int verificar_leitor = 0;
 
-    printf("Digite o seu codigo de leitor!\n");
+    printf("Digite o seu codigo de leitor: ");
     fflush(stdin);
-    scanf("%d", &leitor_verificar);
-    for(i=0; i<nleitor;i++){
-        if(leitor[i].Codigo_leitor == leitor_verificar){
-            printf("Codigo de Leitor valido!\n");
-            printf("Digite o Titulo do livro!\n");
-            char titulo_livro[50];
+    scanf("%d", &verificar_leitor);
+    for(int i=0; i<nleitor;i++){
+        if(leitor[i].Codigo_leitor == verificar_leitor){
+            printf("\nDigite o ISBN do livro: ");
             fflush(stdin);
-            gets(titulo_livro);
+            gets(isbn);
             for(int n=0; n<nlivro; n++){
-                if(strcmp(titulo_livro, livro[n].Titulo) == 0){//Permite comparar alfabeticamente duas strings. Devolve 0 - se as duas strings forem alfabeticamente iguais
-                    printf("Titulo existe!\n");
-                    char estado_disponivel[12]= "disponivel";
-                    if(strcmp(livro[n].Estado, estado_disponivel) == 0){
-                        printf("Esta disponivel\n");
-                        printf("Insira a data da requisicao!\n");
+                if(strcmp(isbn, livro[n].ISBN) == 0){//Verifica se o livro esta registado
+                    if(strcmp(livro[n].Estado, "disponivel") == 0 && strcmp(livro[n].Estado, "inutilizavel") != 0 ){//Verifica a disponibilidade do livro
+                        printf("\nO livro esta disponivel!\n");
+                        printf("\nInsira a data da requisicao!\n");
 
-                        do{
-                            fflush(stdin);
-                            printf("Dia:\n");
-                            scanf("%d", &livro[n].dia_requisitar);
-                        }while(livro[n].dia_requisitar <1 || livro[n].dia_requisitar >31);
+                        do{//Realiza o pedido da data de requisicao ate que a data seja valida!
+                            if(verificar_data == 1){
+                                printf("\nData Invalida!\n");
+                                verificar_data = 0;
+                            }
+                            do{//Pede um numero do dia da requisicao ate estar entre 1 e 31
+                                fflush(stdin);
+                                printf("\nDia: ");
+                                scanf("%d", &livro[n].dia_requisitar);
+                            }while(livro[n].dia_requisitar <1 || livro[n].dia_requisitar >31);
 
-                        do{
-                            fflush(stdin);
-                            printf("Mes:\n");
-                            scanf("%d", &livro[n].mes_requisitar);
-                        }while(livro[n].mes_requisitar <1 || livro[n].mes_requisitar >12);
+                            do{//Pede um numero do mes da requisicao ate estar entre 1 e 12
+                                fflush(stdin);
+                                printf("\nMes: ");
+                                scanf("%d", &livro[n].mes_requisitar);
+                            }while(livro[n].mes_requisitar <1 || livro[n].mes_requisitar >12);
 
-                        do{
-                            fflush(stdin);
-                            printf("Ano:\n");
-                            scanf("%d", &livro[n].ano_requisitar);
-                        }while(livro[n].ano_requisitar<2000);
+                            do{//Pede um numero do ano de requisicao ate ser maior que 2000
+                                fflush(stdin);
+                                printf("\nAno: ");
+                                scanf("%d", &livro[n].ano_requisitar);
+                            }while(livro[n].ano_requisitar<2000);
+
+                            //Verifica se no mes de fevereiro foi introduzido mais de 29 dias em anos bissextos
+                            if(livro[n].ano_requisitar %4 == 0){
+                                if(livro[n].mes_requisitar == 2){
+                                    if(livro[n].dia_requisitar > 29){
+                                         verificar_data = 1;
+                                    }
+                                }
+                            }
+                            //Verifica se no mes de fevereiro foi introduzido mais de 28 dias em anos nao bissextos
+                             if(livro[n].ano_requisitar %4 == 1){
+                                if(livro[n].mes_requisitar == 2){
+                                    if(livro[n].dia_requisitar> 28){
+                                        verificar_data = 1;
+                                    }
+                                }
+                            }
+                            //Verifica se em abril, junho, setembro ou novembro tem mais de 30 dias
+                            if(livro[n].mes_requisitar == 4 || livro[n].mes_requisitar == 6 || livro[n].mes_requisitar == 9 || livro[n].mes_requisitar == 11){
+                                if(livro[n].dia_requisitar> 30){
+                                    verificar_data = 1;
+                                }
+                            }
+                        }while(verificar_data==1);
+                        verificar_data = 0;
+
+                        printf("\n\tData de requisicao: %d/%d/%d\n",livro[n].dia_requisitar, livro[n].mes_requisitar, livro[n].ano_requisitar);
+                        printf("\nRequisicao realizada com sucesso!\n\n");
 
                         requisicao[nrequisicoes].Codigo_leitor = leitor[i].Codigo_leitor;
                         strcpy(requisicao[nrequisicoes].ISBN,livro[n].ISBN);
                         requisicao[nrequisicoes].Dia = livro[n].dia_requisitar;
                         requisicao[nrequisicoes].Mes = livro[n].mes_requisitar;
                         requisicao[nrequisicoes].Ano = livro[n].ano_requisitar;
-                        strcpy(requisicao[nrequisicoes].Estado_entrega,estado_requisitado);
+                        strcpy(requisicao[nrequisicoes].Estado_entrega,"requisitado");
                         nrequisicoes++;
                         leitor[i].livrosReq++;
                         strcpy(livro[n].Estado, "requisitado");//Permite copiar strOrigem para strDestino.
+                        printf("Pressione alguma tecla para continuar!\n\n");
+                        getch();
                         exibir_menu();
                     }else{
-                        printf("Nao esta disponivel\n\n");
+                        printf("\nO livro nao esta disponivel!\n\n");
+                        printf("Pressione alguma tecla para continuar!\n\n");
+                        getch();
                         exibir_menu();
                     }
                 }
             }
-            printf("Livro nao encontrado!\n\n");
+            printf("\nISBN invalido!\n");
+            printf("Faca o registo do livro antes de o requisitar!\n\n");
+            printf("Pressione alguma tecla para continuar!\n\n");
+            getch();
             exibir_menu();
         }
     }
-    printf("Codigo de Leitor invalido!\n");
-    printf("Faca o seu registo antes de requisitar um livro!\n\n");
+    printf("\nCodigo de Leitor invalido!\n");
+    printf("Faca o registo do leitor antes de requisitar um livro!\n\n");
+    printf("Pressione alguma tecla para continuar!\n\n");
+    getch();
     exibir_menu();
 
 }
@@ -414,48 +452,64 @@ void devolver_livro(){
     Entradas: Nao tem
     Saidas: Nao tem
 */
+    int n=0;
+    int verificar_isbn=0;
     char opcao;
     char isbn[14];
-    char estado_disponivel[12]= "disponivel";
-    printf("Insira o ISBN do livro!\n");
+
+    printf("Insira o ISBN do livro: ");
     fflush(stdin);
     gets(isbn);
-    for(int n=0; n<nlivro;n++){
-        if((strcmp(isbn, livro[n].ISBN) == 0) && (strcmp(estado_disponivel, livro[n].Estado) != 0)){
-            printf("Livro devolvido!\n");
-            strcpy(livro[n].Estado, "disponivel");
-            int tempo_requisitar=calcular_dias_requisicao(n);
-            int tempo_atual=calcular_dias_atual();
-            printf("O livro foi requisitado durante %d dias!\n\n",tempo_atual-tempo_requisitar);
-            printf("O livro esta inutilizavel?\n");
-            printf("Se sim, digite \"s\", se nao pressione qualquer tecla!\n");
-            fflush(stdin);
-            scanf("%c", &opcao);
-            switch(opcao){
-                case 's':
-                case 'S':
-                    for(int i=0; i<nrequisicoes;i++){
-                        if(strcmp(livro[n].ISBN, requisicao[i].ISBN) == 0){
-                            strcpy(requisicao[i].Estado_entrega, "inutilizavel");
-                            strcpy(livro[n].Estado,"inutilizavel");
-                        }
-                    }
-                break;
-                default:
-                     for(int i=0; i<nrequisicoes;i++){
-                        if(strcmp(livro[n].ISBN, requisicao[i].ISBN) == 0){
-                            strcpy(requisicao[i].Estado_entrega, "disponivel");
-                            strcpy(livro[n].Estado,"disponivel");
-                        }
-                    }
-                }
-            printf("Pressione alguma tecla para continuar!\n\n");
-            getch();
-            exibir_menu();
+    for(int i=0; i<nlivro;i++){
+        if(strcmp(isbn, livro[i].ISBN) == 0){
+            n=i;
+            verificar_isbn=1;
+        }else{
+            if(verificar_isbn !=1){
+                verificar_isbn=0;
+            }
         }
     }
-    printf("Dados introduzidos incorretamente!\n\n");
-    printf("Pressione alguma tecla para continuar!\n\n");
+    if(verificar_isbn==0){
+        printf("\nISBN invalido!\n");
+        printf("\nPressione alguma tecla para continuar!\n\n");
+        getch();
+        exibir_menu();
+    }
+    if(strcmp(livro[n].Estado, "requisitado") == 0){
+        printf("\nLivro devolvido!\n\n");
+        strcpy(livro[n].Estado, "disponivel");
+        int tempo_requisitar=calcular_dias_requisicao(n);//a variavel tempo_requisitar armazena o valor retornado da funcao "calcular_dias_requisicao"
+        int tempo_atual=calcular_dias_atual();////a variavel tempo_atual armazena o valor retornado da funcao "calcular_dias_atual"
+        printf("O livro foi requisitado durante %d dias!\n\n",tempo_atual-tempo_requisitar);//imprime no monitor o numero de dias que o livro esteve requisitado
+        printf("O livro esta inutilizavel?\n");
+        printf("Pressione \"s\" se sim ou qualquer outra tecla se nao: ");
+        fflush(stdin);
+        scanf("%c", &opcao);
+        switch(opcao){
+            case 's':
+            case 'S':
+                for(int i=0; i<nrequisicoes;i++){
+                    if(strcmp(livro[n].ISBN, requisicao[i].ISBN) == 0){
+                        strcpy(requisicao[i].Estado_entrega, "inutilizavel");
+                        strcpy(livro[n].Estado,"inutilizavel");
+                    }
+                }
+                printf("\nLivro devolvido!\n");
+            break;
+            default:
+                 for(int i=0; i<nrequisicoes;i++){
+                    if(strcmp(livro[n].ISBN, requisicao[i].ISBN) == 0){
+                        strcpy(requisicao[i].Estado_entrega, "disponivel");
+                        strcpy(livro[n].Estado,"disponivel");
+                    }
+                }
+                printf("\nLivro devolvido!\n");
+            }
+        }else{
+            printf("\nO livro nao foi requisitado!\n");
+        }
+    printf("\nPressione alguma tecla para continuar!\n\n");
     getch();
     exibir_menu();
 }
@@ -464,7 +518,7 @@ void exibir_menu_listagens(){
     Entradas: Nao tem
     Saidas: Nao tem
 */
-    int num=0;
+    int opcao=0;
     printf("\t-- Listagem --\n\n");
     printf("\t1 - Livro \n");
     printf("\t2 - Leitores \n");
@@ -475,9 +529,9 @@ void exibir_menu_listagens(){
     do{
         fflush(stdin);
         printf("\t\tOPCAO: ");
-        scanf("%d", &num);
+        scanf("%d", &opcao);
         printf("\n");
-        switch(num){
+        switch(opcao){
             case 1:
                 for (int n = 0; n < nlivro; n++) {
                     printf("\nLivro%d:\n\n", n + 1);
@@ -526,10 +580,9 @@ void exibir_menu_listagens(){
             default:
                 printf("Opcao invalida. Escolha uma do menu!\n\n");
         }
-    }while(num!=1 && num!=2 && num!=3 && num!=4 && num!=0);
+    }while(opcao!=1 && opcao!=2 && opcao!=3 && opcao!=4 && opcao!=0);
 
 }
-
 void requisitar_ultimas_10(){
 /*  Descrição: Imprime as 10 ultimas requisicoes de cada leitor
     Entradas: Nao tem
@@ -582,7 +635,7 @@ int calcular_dias_atual(){
     time(&tempo);
     timeinfo=localtime(&tempo);
     int dia_atual=timeinfo->tm_mday, mes_atual=timeinfo->tm_mon+1, ano_atual=timeinfo->tm_year+1900;
-    printf("Data atual: %d/%d/%d\n",dia_atual,mes_atual,ano_atual);
+    printf("Data atual:\t\t %d/%d/%d\n\n",dia_atual,mes_atual,ano_atual);
     int dias_mes[] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
     int total_dias_atual = 0;
     int i=0;
@@ -612,7 +665,7 @@ int calcular_dias_requisicao(int n){
     Entradas: ‘n’ e o numero do indice da estrutura livro
     Saidas: ‘total_dias_requisitar’ é o número de dias desde a data 1/1/1 ate a data atual
 */
-    printf("Data de requisicao %d/%d/%d\n",livro[n].dia_requisitar,livro[n].mes_requisitar,livro[n].ano_requisitar);
+    printf("Data de requisicao:\t %d/%d/%d\n",livro[n].dia_requisitar,livro[n].mes_requisitar,livro[n].ano_requisitar);
     int dias_mes[] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
     int total_dias_requisitar = 0;
     int i=0;
@@ -644,7 +697,6 @@ void carregar_ficheiro(){
     Saidas: Nao tem
 */
 
-        char estado_requisitado[12]= "requisitado";
         FILE *ficheiro;
         ficheiro = fopen("Biblioteca.txt", "r");
         fscanf(ficheiro, "\nNumero de Livros: %d\n",&nlivro);
@@ -658,7 +710,7 @@ void carregar_ficheiro(){
         fscanf(ficheiro, "Autor: %s\n", livro[n].Autor);
         fscanf(ficheiro, "Editora: %s\n", livro[n].Editora);
         fscanf(ficheiro, "Estado: %s\n", livro[n].Estado);
-        if(strcmp(livro[n].Estado, estado_requisitado) == 0){
+        if(strcmp(livro[n].Estado, "requisitado") == 0){
             fscanf(ficheiro, "Requisitado: %d/%d/%d\n", &livro[n].dia_requisitar,&livro[n].mes_requisitar,&livro[n].ano_requisitar);
         }
     }
@@ -687,7 +739,6 @@ void guardar_ficheiro(){
     Saidas: Nao tem
 */
 
-        char estado_requisitado[12]= "requisitado";
         FILE *ficheiro;
         ficheiro = fopen("Biblioteca.txt", "w");
         fprintf(ficheiro, "\nNumero de Livros: %d\n",nlivro);
@@ -700,7 +751,7 @@ void guardar_ficheiro(){
         fprintf(ficheiro, "Autor: %s\n", livro[n].Autor);
         fprintf(ficheiro, "Editora: %s\n", livro[n].Editora);
         fprintf(ficheiro, "Estado: %s\n", livro[n].Estado);
-        if(strcmp(livro[n].Estado, estado_requisitado) == 0){
+        if(strcmp(livro[n].Estado, "requisitado") == 0){
             fprintf(ficheiro, "Requisitado: %d/%d/%d\n", livro[n].dia_requisitar,livro[n].mes_requisitar,livro[n].ano_requisitar);
         }
     }
@@ -728,8 +779,8 @@ void desligar_programa(){
 */
     char opcao;
     fflush(stdin);
-    printf("\nDeseja sair?\n");
-    printf("Se sim, digite \"s\", se deseja continuar digite qualquer tecla!\n");
+    printf("\nTem certeza que deseja sair?\n");
+    printf("Pressione \"s\" para sair ou qualquer outra tecla para continuar!\n");
     scanf("%c", &opcao);
     switch(opcao){
         case 's':

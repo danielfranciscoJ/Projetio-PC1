@@ -1,7 +1,7 @@
 
 Numero de Livros: 5
 Numero de Leitores: 5
-Numero de Requisicoes: 15
+Numero de Requisicoes: 18
 
 
 Livro 1:
@@ -10,7 +10,7 @@ ISBN: 12345
 Titulo: titulo1
 Autor: autor1
 Editora: editora1
-Estado: disponivel
+Estado: inutilizavel
 
 Livro 2:
 
@@ -26,7 +26,7 @@ ISBN: 1234567
 Titulo: titulo3
 Autor: autor3
 Editora: editora3
-Estado: disponivel
+Estado: inutilizavel
 
 Livro 4:
 
@@ -103,7 +103,7 @@ Requisicao 3
 Codigo de leitor: 2
 ISBN: 1234567
 Data de requisicao: 3/1/1
-Estado da entrega: disponivel 
+Estado da entrega: inutilizavel 
 
 Requisicao 4 
 
@@ -124,7 +124,7 @@ Requisicao 6
 Codigo de leitor: 2
 ISBN: 1234567
 Data de requisicao: 6/1/1
-Estado da entrega: disponivel 
+Estado da entrega: inutilizavel 
 
 Requisicao 7 
 
@@ -145,7 +145,7 @@ Requisicao 9
 Codigo de leitor: 2
 ISBN: 1234567
 Data de requisicao: 9/1/1
-Estado da entrega: disponivel 
+Estado da entrega: inutilizavel 
 
 Requisicao 10 
 
@@ -166,14 +166,14 @@ Requisicao 12
 Codigo de leitor: 2
 ISBN: 1234567
 Data de requisicao: 12/1/1
-Estado da entrega: disponivel 
+Estado da entrega: inutilizavel 
 
 Requisicao 13 
 
 Codigo de leitor: 1
 ISBN: 1234567
 Data de requisicao: 12/1/1
-Estado da entrega: disponivel 
+Estado da entrega: inutilizavel 
 
 Requisicao 14 
 
@@ -186,5 +186,26 @@ Requisicao 15
 
 Codigo de leitor: 2
 ISBN: 123456
-Data de requisicao: 31/2/2001
+Data de requisicao: 26/2/2001
+Estado da entrega: inutilizavel 
+
+Requisicao 16 
+
+Codigo de leitor: 8
+ISBN: 12345
+Data de requisicao: 22/5/2001
+Estado da entrega: inutilizavel 
+
+Requisicao 17 
+
+Codigo de leitor: 8
+ISBN: 1234567
+Data de requisicao: 23/2/2020
+Estado da entrega: inutilizavel 
+
+Requisicao 18 
+
+Codigo de leitor: 1
+ISBN: 12345
+Data de requisicao: 11/5/2021
 Estado da entrega: inutilizavel 
