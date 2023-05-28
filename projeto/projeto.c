@@ -1,8 +1,8 @@
 /*
 Projeto PC1
 Realizado por:
--Diogo Cravo
--Daniel Jesus
+-Diogo Cravo nº2222030
+-Daniel Jesus nº22
 */
 
 #include <stdio.h>
@@ -11,7 +11,6 @@ Realizado por:
 #include <time.h>
 #include <conio.h>
 #include <windows.h>
-
 
 #define NLIVROS 50
 #define NLEITORES 50
@@ -31,13 +30,12 @@ void guardar_ficheiro();
 void desligar_programa();
 
 
-
 typedef struct {//Estrutura para os livros
     char ISBN[14]; //Pode armazenar até 13 dígitos incluindo '\0', (tem que ter ser char para poder guardar zeros a esquerda)
     char Titulo[50];
     char Autor[50];
     char Editora[50];
-    char Estado[13];//Pode armazenar as palavras, disponível, requisitado ou inutilizado + incluindo '\0'
+    char Estado[13];//Pode armazenar as palavras, disponível, requisitado ou inutilizavel + incluindo '\0'
     int dia_requisitar;
     int mes_requisitar;
     int ano_requisitar;
@@ -60,7 +58,7 @@ typedef struct {//Estruturas para guardar as requisicoes
     int Dia;//Dia em que foi requisitado
     int Mes;//Mes em que foi requisitado
     int Ano;//Ano em que foi requisitado
-    char Estado_entrega[14];//Estado do livro depois de entregar
+    char Estado_entrega[13];//Estado do livro depois de entregar
 }requisicoes_t;
 
 livro_t livro[NLIVROS];
@@ -590,70 +588,89 @@ void requisitar_ultimas_10(){
 */
     int n=0;
     int codigo=0;
-    int variavel = 0;
+    int verificar_leitor=0;
     int nrequisicoes_por_leitor = 0;
     int num_requisicoes;
+    int incrementa=0;
 
-    printf("Digite o seu codigo de leitor!\n");
+
+    printf("Digite o codigo de leitor: ");
     fflush(stdin);
     scanf("%d", &codigo);
-    if(codigo == requisicao[n].Codigo_leitor){
-        for(int n=0; n<nrequisicoes;n++){//For para saber quantas requisicoes o leitor ja realizou
-            nrequisicoes_por_leitor++;
-        }
-        num_requisicoes=nrequisicoes_por_leitor;//E necessario passar o valor das requisicoes para outra variavel porque depois quanto tiver a decrementar no ciclo for o valor tambem ira decrementar na condicao dentro do ciclo for o que nao e pretendido.
-    for(int n=0; n<num_requisicoes;n++){
-        nrequisicoes_por_leitor--;
-        if(nrequisicoes_por_leitor<10){
-            if(variavel == 0){//Variavel serve para que este texto so aparece 1 vez
-                printf("\nUltimas 10 Requisicoes:\n");
-                printf("Codigo de leitor: %d\n\n", requisicao[n].Codigo_leitor);
-                variavel =1;
-            }
-            printf("ISBN: %s\n", requisicao[n].ISBN);
-            printf("Data de requisicao: %d/%d/%d\n", requisicao[n].Dia,requisicao[n].Mes,requisicao[n].Ano);
-            printf("Estado da entrega: %s \n\n", requisicao[n].Estado_entrega);
 
-        }
 
+    for(int n=0; n<nrequisicoes;n++){//For para saber quantas requisicoes o leitor ja realizou
+        if(codigo == requisicao[n].Codigo_leitor){
+           nrequisicoes_por_leitor++;
+           verificar_leitor=1;
+        }
     }
-    variavel =0;
-    }else{
-    printf("Leitor nao registado!\n");
+    if(verificar_leitor !=1){
+        printf("\nCodigo de Leitor invalido!\n");
+        printf("\nPressione alguma tecla para continuar!\n\n");
+        getch();
+        exibir_menu_listagens();
+    }
+
+    num_requisicoes=nrequisicoes_por_leitor;//E necessario passar o valor das requisicoes para outra variavel porque depois quanto tiver a decrementar no ciclo for o valor tambem ira decrementar na condicao dentro do ciclo for o que nao e pretendido.
+    printf("\nUltimas 10 Requisicoes:\n");
+    printf("Codigo de leitor: %d\n\n", requisicao[n].Codigo_leitor);
+    for(int n=0; n<(num_requisicoes+incrementa);n++){//e necessario somar a variavel incrementar para que as requisicoes que foram feitas por outros leitores nao contarem no for
+        if(codigo == requisicao[n].Codigo_leitor){
+            nrequisicoes_por_leitor--;
+        }else{
+            incrementa++;//Se a requisicao nao for feita pelo utilizador o valor de n nao pode ser incrementado
+        }
+        if(nrequisicoes_por_leitor<10){
+            if(codigo == requisicao[n].Codigo_leitor){
+                printf("ISBN: %s\n", requisicao[n].ISBN);
+                for(int i=0; i<nlivro;i++){
+                    if(strcmp(requisicao[n].ISBN,livro[i].ISBN)==0){
+                        printf("Titulo: %s\n", livro[i].Titulo);
+                    }
+                }
+                printf("Data de requisicao: %d/%d/%d\n", requisicao[n].Dia,requisicao[n].Mes,requisicao[n].Ano);
+                printf("Estado da entrega: %s \n\n", requisicao[n].Estado_entrega);
+            }
+        }
     }
     printf("\nPressione uma tecla para continuar!\n\n");
     getch();
     exibir_menu_listagens();
 }
 int calcular_dias_atual(){
-/*  Descrição: Calcula todos os dias desde a data 1/1/1 ate a data atual
+/*  Descrição: Calcula todos os dias desde que se passaram ate a data atual
     Entradas: Nao tem
     Saidas: total_dias_atual
 */
+    //Codigo que fornece o tempo atual
     time_t tempo;
     struct tm *timeinfo;
     time(&tempo);
     timeinfo=localtime(&tempo);
     int dia_atual=timeinfo->tm_mday, mes_atual=timeinfo->tm_mon+1, ano_atual=timeinfo->tm_year+1900;
-    printf("Data atual:\t\t %d/%d/%d\n\n",dia_atual,mes_atual,ano_atual);
+
     int dias_mes[] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
     int total_dias_atual = 0;
-    int i=0;
+    int incrementador =0;
+
+    //Imprime no monitor o tempo real
+    printf("Data atual:\t\t %d/%d/%d\n\n",dia_atual,mes_atual,ano_atual);
     ano_atual=ano_atual-1;
     if(ano_atual%4 ==0){//Verifica se o ano anterior e bissexto ou nao.
         //Esta conta apesar de ser (int) pode ter na conta "0.75" e "0.25", porque como o ano e bissexto a conta nunca vai conter virgulas, logo nao se vai perder informacao.
-        total_dias_atual+=ano_atual*0.75*365+ano_atual*0.25*366; //Calcula todos os dias desde 1/1/1 ate ao dia 31/12 do ano anterior.
+        total_dias_atual+=ano_atual*0.75*365+ano_atual*0.25*366; //Calcula todos os dias desde que se passaram ate ao dia 31/12 do ano anterior.
     }else{//Se nao for bissexto
-        for(i=0; ano_atual%4!=0;ano_atual--){//Remove anos ate que esta num ano bissexto
-            i++;
+        for(incrementador=0; ano_atual%4!=0; incrementador++){//Remove anos ate que esteja num ano bissexto
+           ano_atual--;
         }
-        total_dias_atual+=ano_atual*0.75*365+ano_atual*0.25*366+i*365;//Calcula todos os dias desde 1/1/1 ate ao dia 31/12 do ano anterior e depois soma os anos removidos e multiplica por 365 porque sao anos nao bissextos
+        total_dias_atual+=ano_atual*0.75*365+ano_atual*0.25*366+incrementador*365;//Calcula todos os dias ate ao dia 31/12 do ano anterior e depois soma os anos removidos e multiplica por 365 porque sao anos nao bissextos
     }
-    ano_atual+=i+1;//Soma ao ano os anos que foram removidos no ciclo for, mais 1 que foi removido no inicio. Para verificar se o ano atual e bissexto ou nao
+    ano_atual+=incrementador+1;//Soma ao ano os anos que foram removidos no ciclo for, mais 1 que foi removido no inicio. Para verificar se o ano atual e bissexto ou nao
     if (ano_atual % 4 == 0) {//Verifica se o ano atual e bissexto
         dias_mes[1] = 29; //Modifica o vetor de index 1 para 29 devido aos anos bisextos
     }
-    for (i = 0; i < mes_atual - 1; i++) {//Soma os dias dos meses.
+    for (int i = 0; i < mes_atual - 1; i++) {//Soma os dias dos meses.
         total_dias_atual += dias_mes[i];
     }
     total_dias_atual += dia_atual;//Soma o resto dos dias
@@ -661,9 +678,9 @@ int calcular_dias_atual(){
 
 }
 int calcular_dias_requisicao(int n){
-/*  Descrição: Calcula todos os dias desde a data 1/1/1 ate a data atual
+/*  Descrição: Calcula todos os dias que se passaram ate a data atual
     Entradas: ‘n’ e o numero do indice da estrutura livro
-    Saidas: ‘total_dias_requisitar’ é o número de dias desde a data 1/1/1 ate a data atual
+    Saidas: ‘total_dias_requisitar’ é o número de dias que se passaram ate a data atual
 */
     printf("Data de requisicao:\t %d/%d/%d\n",livro[n].dia_requisitar,livro[n].mes_requisitar,livro[n].ano_requisitar);
     int dias_mes[] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};

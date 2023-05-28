@@ -1,7 +1,7 @@
 
 Numero de Livros: 5
 Numero de Leitores: 5
-Numero de Requisicoes: 18
+Numero de Requisicoes: 21
 
 
 Livro 1:
@@ -34,7 +34,8 @@ ISBN: 12345678
 Titulo: titulo4
 Autor: autor4
 Editora: editora4
-Estado: disponivel
+Estado: requisitado
+Requisitado: 1/1/500
 
 Livro 5:
 
@@ -209,3 +210,24 @@ Codigo de leitor: 1
 ISBN: 12345
 Data de requisicao: 11/5/2021
 Estado da entrega: inutilizavel 
+
+Requisicao 19 
+
+Codigo de leitor: 2
+ISBN: 12345678
+Data de requisicao: 1/1/2
+Estado da entrega: disponivel 
+
+Requisicao 20 
+
+Codigo de leitor: 2
+ISBN: 12345678
+Data de requisicao: 1/1/2
+Estado da entrega: disponivel 
+
+Requisicao 21 
+
+Codigo de leitor: 2
+ISBN: 12345678
+Data de requisicao: 1/1/500
+Estado da entrega: requisitado 
