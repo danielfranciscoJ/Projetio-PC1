@@ -34,8 +34,7 @@ ISBN: 12345678
 Titulo: titulo4
 Autor: autor4
 Editora: editora4
-Estado: requisitado
-Requisitado: 1/1/500
+Estado: disponivel
 
 Livro 5:
 
@@ -97,7 +96,7 @@ Requisicao 2
 Codigo de leitor: 2
 ISBN: 12345678
 Data de requisicao: 2/11/2021
-Estado da entrega: disponivel 
+Estado da entrega: devolvido 
 
 Requisicao 3 
 
@@ -118,7 +117,7 @@ Requisicao 5
 Codigo de leitor: 2
 ISBN: 12345678
 Data de requisicao: 5/11/2021
-Estado da entrega: disponivel 
+Estado da entrega: devolvido 
 
 Requisicao 6 
 
@@ -139,7 +138,7 @@ Requisicao 8
 Codigo de leitor: 2
 ISBN: 12345678
 Data de requisicao: 8/11/2021
-Estado da entrega: disponivel 
+Estado da entrega: devolvido 
 
 Requisicao 9 
 
@@ -160,7 +159,7 @@ Requisicao 11
 Codigo de leitor: 2
 ISBN: 12345678
 Data de requisicao: 11/11/2021
-Estado da entrega: disponivel 
+Estado da entrega: devolvido 
 
 Requisicao 12 
 
@@ -181,7 +180,7 @@ Requisicao 14
 Codigo de leitor: 1
 ISBN: 12345678
 Data de requisicao: 12/1/1
-Estado da entrega: disponivel 
+Estado da entrega: devolvido 
 
 Requisicao 15 
 
@@ -216,18 +215,18 @@ Requisicao 19
 Codigo de leitor: 2
 ISBN: 12345678
 Data de requisicao: 1/1/2
-Estado da entrega: disponivel 
+Estado da entrega: devolvido 
 
 Requisicao 20 
 
 Codigo de leitor: 2
 ISBN: 12345678
 Data de requisicao: 1/1/2
-Estado da entrega: disponivel 
+Estado da entrega: devolvido 
 
 Requisicao 21 
 
 Codigo de leitor: 2
 ISBN: 12345678
 Data de requisicao: 1/1/500
-Estado da entrega: requisitado 
+Estado da entrega: devolvido 
