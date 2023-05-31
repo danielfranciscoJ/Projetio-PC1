@@ -13,9 +13,10 @@ Realizado por:
 #include <windows.h>
 #include <ctype.h> //biblioteca para as funcoes isalpha() e isdigit()
 
-#define MAXLIVROS 50
-#define MAXLEITORES 10
-#define MAXREQUISICOES 50
+#define MAXLIVROS 50//Numero maximo de livros
+#define MAXLEITORES 50//Numero maximo de leitores
+#define MAXREQUISICOES 50//Numero maximo de requisicoes
+#define TEXTO 50 //Numero maximo de indice dos vetores: Titulo, Autor, Editora, Nome e Localidade
 
 void exibir_menu();
 void registar_livro();
@@ -33,24 +34,26 @@ void desligar_programa();
 
 typedef struct {//Estrutura para os livros
     char ISBN[14]; //Pode armazenar até 13 dígitos incluindo '\0', (tem que ter ser char para poder guardar zeros a esquerda)
-    char Titulo[50];
-    char Autor[50];
-    char Editora[50];
+    char Titulo[TEXTO];
+    char Autor[TEXTO];
+    char Editora[TEXTO];
     char Estado[13];//Pode armazenar as palavras, disponível, requisitado ou inutilizavel + incluindo '\0'
     int dia_requisitar;
     int mes_requisitar;
     int ano_requisitar;
 }livro_t;
+livro_t livro[MAXLIVROS];
 
 typedef struct {//Estrutura para os leitores
     int Codigo_leitor;
-    char Nome[50];
+    char Nome[TEXTO];
     int Dia;
     int Mes;
     int Ano;
-    char Localidade[50];
+    char Localidade[TEXTO];
     long int Contacto;
 }leitor_t;
+leitor_t leitor[MAXLEITORES];
 
 typedef struct {//Estruturas para guardar as requisicoes
     int Codigo_leitor;
@@ -60,9 +63,6 @@ typedef struct {//Estruturas para guardar as requisicoes
     int Ano;//Ano em que foi requisitado
     char Estado_entrega[13];//Pode armazenar as palavras, devolvido, requisitado ou inutilizavel + incluindo '\0'
 }requisicoes_t;
-
-livro_t livro[MAXLIVROS];
-leitor_t leitor[MAXLEITORES];
 requisicoes_t requisicao[MAXREQUISICOES];
 
 int nlivro=0;
@@ -95,7 +95,6 @@ void exibir_menu(){
             requisicoes_ativas++;
         }
     }
-
         printf("\t-- Gestao de Requisicoes de uma Biblioteca --\n\n");
         printf("Total de Livros:%d \t\t\t Total de Leitores:%d \n",nlivro,nleitor);
         printf("Total de Requisicoes ativas:%d \n\n", requisicoes_ativas);
@@ -131,7 +130,7 @@ void exibir_menu(){
                 desligar_programa();
             break;
             default:
-                printf("Opcao invalida. Escolha uma do menu!\n\n");
+                printf("Escolha uma opção válida do menu!\n\n");
         }
     }while(num!=1 && num!=2 && num!=3 && num!=4 && num!=5 && num!=0);
 
@@ -143,15 +142,15 @@ void registar_livro(){
 */
     char opcao1;
     char opcao2;
-    char isbn_verificar[14];
-    int var = 0;
+    int estado = 0;//Variavel utilizada para ligar e desligar
     int string_comprimento=0;
     int procurar_letras=0;
-
+    int verificar_caracteres=0;
+    char isbn_verificar[14];
 
     if(nlivro<MAXLIVROS){
         do{//Codigo Verifica se o ISBN tem 13 digitos
-            if(var==1){
+            if(estado==1){
                 printf("\nISBN necessita de conter 13 digitos!\n\n");
             }
             string_comprimento = 0;
@@ -161,50 +160,56 @@ void registar_livro(){
                 fflush(stdin);
                 gets(isbn_verificar);
                 for(int i =0; isbn_verificar[i] != '\0';i++){//Verifica o vetor isbn_verificar[i] ate ao final '\0'
-                    if (isdigit(isbn_verificar[i]) == 0) {//isdigit devolve um numero 0 se nao for numero
-                        procurar_letras=1;//Verifica todo o vetor isbn caracter a caracter e se encontrar alguma coisa diferente de um numero passa a variavel procurar_letras para 1
+                    if (isdigit(isbn_verificar[i]) == 0) {//isdigit devolve 0 se nao for numero (letras ou simbolos)
+                        procurar_letras=1;//Verifica todo o vetor "isbn" caracter a caracter e se encontrar alguma coisa diferente de um numero passa a variavel procurar_letras para 1
                     }
                 }
                 if(procurar_letras ==1){
                    printf("\nO ISBN e constituido apenas de numeros!\n\n");
-
                 }
-            }while(procurar_letras==1);
-
-
+            }while(procurar_letras==1);//So sai do (do while) quando o utilizador digitar apenas numeros
             while(isbn_verificar[string_comprimento] != '\0'){
                 string_comprimento++;
             }
-            var = 1;
-        }while(string_comprimento != 13);
-        var = 0;
-
-
+            estado = 1;
+        }while(string_comprimento != 13);//So sai do (do while) quando o utilizador digitar 13 numeros
+        estado = 0;
 
         //Verifica se o ISBN ja esta registado no sistema!
         for(int i=0; i<nlivro;i++){
             if(strcmp(livro[i].ISBN,isbn_verificar)==0){
-                if(var == 0){
+                if(estado == 0){
                     printf("\nO ISBN insirido ja existe! \n\n");
-                    var = 1;
+                    estado = 1;
                     exibir_menu();
                 }
             }
         }
         strcpy(livro[nlivro].ISBN,isbn_verificar);//Permite copiar strOrigem para strDestino.
         printf("\n\tO ISBN e %s \n\n", livro[nlivro].ISBN);
-        var = 0;
-
+        estado = 0;
 
         fflush(stdin);
         printf("Digite o Titulo: ");
         gets(livro[nlivro].Titulo);
         printf("\n\tTitulo: %s\n\n", livro[nlivro].Titulo);
 
-        fflush(stdin);
-        printf("Digite o Autor: ");
-        gets(livro[nlivro].Autor);
-        printf("\n\tAutor: %s\n\n", livro[nlivro].Autor);
+        do{
+            fflush(stdin);
+            printf("Digite o Autor: ");
+            gets(livro[nlivro].Autor);
+            verificar_caracteres=0;
+            for(int i =0; livro[nlivro].Autor[i] != '\0';i++){//Verifica o vetor Autor[i] ate ao final '\0'
+                if ((isalpha(livro[nlivro].Autor[i]) == 0) && (livro[nlivro].Autor[i] != ' ')) {//isalpha devolve um numero 0 se nao for letra
+                    verificar_caracteres=1;//Verifica todo o vetor nome caracter a caracter e se encontrar alguma coisa diferente de uma letra ou diferente de um "space" passa a variavel verificar_caracteres para 1
+                    printf("ola: ");
+                }
+            }
+            if(verificar_caracteres == 1){
+                printf("\nO Nome apenas pode conter letras!\n\n");
+            }
+        }while(verificar_caracteres == 1);//So regista o autor se conter apenas letras
+            printf("\n\tAutor: %s\n\n", livro[nlivro].Autor);
 
         fflush(stdin);
         printf("Digite a Editora: ");
@@ -274,7 +279,8 @@ void registar_leitor(){
     Entradas: Nao tem
     Saidas: Nao tem
 */
-    char opcao;
+    char opcao1;
+    char opcao2;
     int estado = 0;
     int verificar_data=0;
     int verificar_leitor=0;
@@ -302,7 +308,6 @@ void registar_leitor(){
             }
         }
         leitor[nleitor].Codigo_leitor= verificar_leitor;
-        printf("\n\tO Codigo de leitor e %d \n\n", leitor[nleitor].Codigo_leitor);
         estado = 0;
 
         do{
@@ -311,7 +316,7 @@ void registar_leitor(){
             gets(leitor[nleitor].Nome);
             verificar_caracteres=0;
             for(int i =0; leitor[nleitor].Nome[i] != '\0';i++){//Verifica o vetor Nome[i] ate ao final '\0'
-                if (isalpha(leitor[nleitor].Nome[i]) == 0) {//isalpha devolve um numero 0 se nao for letra
+                if ((isalpha(leitor[nleitor].Nome[i]) == 0)&&(leitor[nleitor].Nome[i] != ' ')) {//isalpha devolve um numero 0 se nao for letra
                     verificar_caracteres=1;//Verifica todo o vetor nome caracter a caracter e se encontrar alguma coisa diferente de uma letra passa a variavel verificar_caracteres para 1
                 }
             }
@@ -320,27 +325,26 @@ void registar_leitor(){
                 printf("\nO Nome apenas pode conter letras!\n\n");
             }
         }while(verificar_caracteres == 1);//So regista o nome se conter apenas letras
-            printf("\n\tNome: %s \n\n", leitor[nleitor].Nome);
         do{
             if(verificar_data == 1){
                 printf("Data de Nascimento invalida!\n\n");
             }
             verificar_data=0;
-            printf("Insira a data de Nascimento:\n\n");
+            printf("Insira a data de Nascimento:\n");
 
             do{
                printf("Insira o Dia: ");
                fflush(stdin);
                scanf("%d", &leitor[nleitor].Dia);
             }while(leitor[nleitor].Dia > 31 || leitor[nleitor].Dia < 1);//Pede ao utilizador um dia entre o intervalo de 1 a 31
-            printf("\n\tDia: %d \n\n", leitor[nleitor].Dia);
+
 
             do{
                 printf("Insira o Mes: ");
                 fflush(stdin);
                 scanf("%d", &leitor[nleitor].Mes);
             }while(leitor[nleitor].Mes > 12 || leitor[nleitor].Mes < 1); //Pede ao utilizador um mes entre o intervalo de 1 a 12
-            printf("\n\tMes: %d \n\n", leitor[nleitor].Mes);
+
 
 
             do{
@@ -348,7 +352,7 @@ void registar_leitor(){
                fflush(stdin);
                scanf("%d", &leitor[nleitor].Ano);
             }while(leitor[nleitor].Ano < 1850 || leitor[nleitor].Ano > ano_atual); //Pede ao utilizador um ano entre o intervalo 1850 e o ano atual
-            printf("\n\tAno: %d \n\n", leitor[nleitor].Ano);
+
 
             //Verifica se no mes de fevereiro foi introduzido mais de 29 dias em anos bissextos
             if(leitor[nleitor].Ano %4 == 0){
@@ -374,13 +378,10 @@ void registar_leitor(){
         }while(verificar_data==1);
 
 
-        printf("\tData de Nascimento: %d/%d/%d \n\n", leitor[nleitor].Dia, leitor[nleitor].Mes, leitor[nleitor].Ano);
 
         fflush(stdin);
         printf("Insita a Localidade: ");
         gets(leitor[nleitor].Localidade);
-        printf("\n\tA localidade: %s \n\n", leitor[nleitor].Localidade);
-
 
 
 
@@ -403,25 +404,61 @@ void registar_leitor(){
             }
         }while(leitor[nleitor].Contacto < 100000000 || leitor[nleitor].Contacto > 999999999 || contacto_registado==1);
         contacto_registado = 0;
-        printf("\n\tO Codigo de leitor e %ld \n\n", leitor[nleitor].Contacto);
-        nleitor++;
-
-        printf("Deseja registar outro Leitor?\n");
-        printf("Digite \"s\" para registar outro leitor ou qualquer outra tecla para voltar ao menu: ");
 
 
-        fflush(stdin);
-        scanf("%c", &opcao);
-        switch(opcao){
-            case 's':
-            case 'S':
-                printf("\n");
-                registar_leitor();
-            break;
-            default:
-                printf("\n");
-                exibir_menu();
-        }
+
+         do{
+            printf("Deseja confirmar o registo do leitor? \n\n");
+            printf("\nDigite \"s\" se sim ou \"n\" se nao: ");
+            printf("\nCodigo de leitor:\t%d ", leitor[nleitor].Codigo_leitor);
+            printf("\nNome:\t\t\t%s ", leitor[nleitor].Nome);
+            printf("\nData de Nascimento:\t%d/%d/%d ", leitor[nleitor].Dia, leitor[nleitor].Mes, leitor[nleitor].Ano);
+            printf("\nLocalidade:\t\t%s ", leitor[nleitor].Localidade);
+            printf("\nContacto:\t\t%ld ", leitor[nleitor].Contacto);
+            printf("\n\n\t\tOPCAO: ");
+
+            fflush(stdin);
+            scanf("%c", &opcao1);
+            switch(opcao1){
+                case 's':
+                case 'S':
+                    nleitor++;
+                    printf("\nDeseja registar outro Leitor?\n");
+                    printf("Digite \"s\" para registar outro leitor ou qualquer outra tecla para voltar ao menu: ");
+                    fflush(stdin);
+                    scanf("%c", &opcao2);
+                    switch(opcao2){
+                        case 's':
+                        case 'S':
+                            printf("\n");
+                            registar_leitor();
+                        break;
+                        default:
+                            printf("\n");
+                            exibir_menu();
+                    }
+                break;
+                case 'n':
+                case 'N':
+                     printf("\nDeseja registar outro Leitor?\n");
+                    printf("Digite \"s\" para registar outro leitor ou qualquer outra tecla para voltar ao menu: ");
+                    fflush(stdin);
+                    scanf("%c", &opcao2);
+                    switch(opcao2){
+                        case 's':
+                        case 'S':
+                            printf("\n");
+                            registar_leitor();
+                        break;
+                        default:
+                            printf("\n");
+                            exibir_menu();
+                    }
+                default:
+                    printf("\n");
+                    exibir_menu();
+            }
+        }while(opcao1 != ('s' || 'S' || 'n' || 'N'));
     }else{
         printf("O numero maximo de registros de leitores foi atingido!\n\n");
         exibir_menu();
@@ -675,7 +712,7 @@ void requisitar_ultimas_10(){
     Saidas: Nao tem
 */
     int n=0;
-    int codigo=0;
+    int leitor_codigo=0;
     int verificar_leitor=0;
     int nrequisicoes_por_leitor = 0;
     int num_requisicoes;
@@ -684,11 +721,11 @@ void requisitar_ultimas_10(){
 
     printf("Digite o codigo de leitor: ");
     fflush(stdin);
-    scanf("%d", &codigo);
+    scanf("%d", &leitor_codigo);
 
 
     for(int n=0; n<nrequisicoes;n++){//For para saber quantas requisicoes o leitor ja realizou
-        if(codigo == requisicao[n].Codigo_leitor){
+        if(leitor_codigo == requisicao[n].Codigo_leitor){
            nrequisicoes_por_leitor++;
            verificar_leitor=1;
         }
@@ -704,13 +741,13 @@ void requisitar_ultimas_10(){
     printf("\nUltimas 10 Requisicoes:\n");
     printf("Codigo de leitor: %d\n\n", requisicao[n].Codigo_leitor);
     for(int n=0; n<(num_requisicoes+incrementa);n++){//e necessario somar a variavel incrementar para que as requisicoes que foram feitas por outros leitores nao contarem no for
-        if(codigo == requisicao[n].Codigo_leitor){
+        if(leitor_codigo == requisicao[n].Codigo_leitor){
             nrequisicoes_por_leitor--;
         }else{
             incrementa++;//Se a requisicao nao for feita pelo utilizador o valor de n nao pode ser incrementado
         }
         if(nrequisicoes_por_leitor<10){
-            if(codigo == requisicao[n].Codigo_leitor){
+            if(leitor_codigo == requisicao[n].Codigo_leitor){
                 printf("ISBN: %s\n", requisicao[n].ISBN);
                 for(int i=0; i<nlivro;i++){
                     if(strcmp(requisicao[n].ISBN,livro[i].ISBN)==0){
