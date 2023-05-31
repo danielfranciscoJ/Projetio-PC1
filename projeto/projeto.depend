@@ -15,11 +15,12 @@
 	<conio.h>
 	<windows.h>
 
-1685284022 source:c:\users\diogo\documents\github\projetio-pc1\projeto\projeto.c
+1685554150 source:c:\users\diogo\documents\github\projetio-pc1\projeto\projeto.c
 	<stdio.h>
 	<stdlib.h>
 	<string.h>
 	<time.h>
 	<conio.h>
 	<windows.h>
+	<ctype.h>
 
