@@ -2,7 +2,7 @@
 Projeto PC1
 Realizado por:
 -Diogo Cravo nº2222030
--Daniel Jesus nº22
+-Daniel Jesus nº2221378
 */
 
 #include <stdio.h>
@@ -643,7 +643,7 @@ void exibir_menu_listagens(){
 */
     int opcao=0;
     printf("\t-- Listagem --\n\n");
-    printf("\t1 - Livro \n");
+    printf("\t1 - Livros \n");
     printf("\t2 - Leitores \n");
     printf("\t3 - Livros Requisitados \n");
     printf("\t4 - As 10 ultimas requisicoes \n");
