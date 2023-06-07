@@ -1,7 +1,0 @@
-Coisas que faltam no programa.
-
-
-Listagem:
--Mudar o ficheiro para binario
-
-
