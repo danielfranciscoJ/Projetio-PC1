@@ -1,8 +1,12 @@
 /*
 Projeto PC1
 Realizado por:
--Diogo Cravo nº2222030
--Daniel Jesus nº22
+
+Diogo Filipe Vieira Cravo, nº2222030
+Email:  2222030@my.ipleiria.pt
+
+Daniel Francisco Carreira de Jesus, nº2221378
+Email:  2221378@my.ipleiria.pt
 */
 
 #include <stdio.h>
@@ -995,7 +999,7 @@ void desligar_programa(){
     char opcao;
     fflush(stdin);
     printf("Tem certeza que deseja sair?\n");
-    printf("Digite \"s\" para sair ou qualquer outra tecla para continuar: ");
+    printf("Digite \"s\" para sair ou qualquer outra tecla para voltar ao menua: ");
     scanf("%c", &opcao);
     switch(opcao){
         case 's':
