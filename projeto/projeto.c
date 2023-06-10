@@ -1,25 +1,28 @@
 /*
-Projeto PC1
-Realizado por:
+PROJETO DE PROGRAMAÇÃO DE COMPUTADORES I
+REALIZADO POR:
 
-Diogo Filipe Vieira Cravo, nº2222030
-Email:  2222030@my.ipleiria.pt
+NOME:               Diogo Filipe Vieira Cravo
+Nº DE ESTUDANTE:    2222030
+EMAIL:              2222030@my.ipleiria.pt
 
-Daniel Francisco Carreira de Jesus, nº2221378
-Email:  2221378@my.ipleiria.pt
+NOME:               Daniel Francisco Carreira de Jesus
+Nº DE ESTUDANTE:    2221378
+EMAIL:              2221378@my.ipleiria.pt
 */
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <windows.h>
+//As Bibliotecas <time.h> e <conio.h> utilizadas para obter o dia, o mes e o ano atual
 #include <time.h>
 #include <conio.h>
-#include <windows.h>
-#include <ctype.h> //biblioteca para as funcoes isalpha() e isdigit()
+#include <ctype.h> //Biblioteca utilizada para as funcoes isalpha() e isdigit()
 
-#define MAXLIVROS 50//Numero maximo de livros
-#define MAXLEITORES 50//Numero maximo de leitores
-#define MAXREQUISICOES 50//O numero maximo de requisicoes
+#define MAXLIVROS 50 //Numero maximo de livros
+#define MAXLEITORES 50 //Numero maximo de leitores
+#define MAXREQUISICOES MAXLEITORES*10 //O numero maximo de requisicoes e = MAXLEITORES*10
 #define TEXTO 50 //Numero maximo de indice dos vetores: Titulo, Autor, Editora, Nome e Localidade
 
 void exibir_menu();
@@ -36,45 +39,48 @@ void guardar_ficheiro();
 void desligar_programa();
 
 
-typedef struct {//Estrutura para os livros
-    char ISBN[14]; //Pode armazenar até 13 dígitos incluindo '\0', (tem que ter ser char para poder guardar zeros a esquerda)
-    char Titulo[TEXTO];
-    char Autor[TEXTO];
-    char Editora[TEXTO];
-    char Estado[13];//Pode armazenar as palavras, disponível, requisitado ou inutilizavel + incluindo '\0'
-    int dia_requisitar;
-    int mes_requisitar;
-    int ano_requisitar;
-}livro_t;
-livro_t livro[MAXLIVROS];
-
-typedef struct {//Estrutura para os leitores
-    int Codigo_leitor;
-    char Nome[TEXTO];
-    int Dia;
-    int Mes;
-    int Ano;
-    char Localidade[TEXTO];
-    char Contacto[10];
-}leitor_t;
-leitor_t leitor[MAXLEITORES];
-
-
-typedef struct {//Estruturas para guardar as requisicoes
-    int Codigo_leitor;
+typedef struct {//Estrutura de vetores para guardar livros com as suas respetivas informacoes
+    //ISBN de um livro e um numero unico que indentifica um livro
+    //Pode armazenar ate 13 digitos incluindo '\0', (tem que ter ser char para poder guardar zeros a esquerda)
     char ISBN[14];
-    int Dia;//Dia em que foi requisitado
-    int Mes;//Mes em que foi requisitado
-    int Ano;//Ano em que foi requisitado
+    char Titulo[TEXTO];//Titulo do livro. Informacao intruduzida pelo utilizador
+    char Autor[TEXTO];//Autor do livro. Informacao intruduzida pelo utilizador
+    char Editora[TEXTO];//Editora do livro. Informacao intruduzida pelo utilizador
+    char Estado[13];//Pode armazenar as palavras, disponível, requisitado ou inutilizavel, incluindo '\0'
+    int dia_requisitar;//Dia em que o livro foi requisitado
+    int mes_requisitar;//Mes em que o livro foi requisitado
+    int ano_requisitar;//Ano em que o livro foi requisitado
+}livro_t;
+livro_t livro[MAXLIVROS];//Numero maximo de livros
+
+typedef struct {//Estrutura de vetores para guardar leitores com as suas respetivas informacoes
+    int Codigo_leitor;//Codigo de leitor unico para cada leitor
+    char Nome[TEXTO];//Nome do leitor inserido pelo utilizador
+    //As variaveis Dia, Mes e Ano sao referentes a data de Nascimento do leitor
+    int Dia;//Dia em que o livro foi requisitado
+    int Mes;//Mes em que o livro foi requisitado
+    int Ano;//Ano em que o livro foi requisitado
+    char Localidade[TEXTO];//
+    char Contacto[10];////Pode armazenar ate 9 digitos incluindo '\0', e char para fazer protecao de dados mais facilmente
+}leitor_t;
+leitor_t leitor[MAXLEITORES];//Numero maximo de leitores
+
+
+typedef struct {//Estrutura de vetores para guardar leitores com as suas respetivas informacoes
+    int Codigo_leitor;//Codigo de leitor unico para cada leitor
+    char ISBN[14];//Pode armazenar ate 13 digitos incluindo '\0', (tem que ter ser char para poder guardar zeros a esquerda)
+    int Dia;//Dia em que o livro foi requisitado
+    int Mes;//Mes em que o livro foi requisitado
+    int Ano;//Ano em que o livro foi requisitado
     char Estado_entrega[13];//Pode armazenar as palavras, devolvido, requisitado ou inutilizavel + incluindo '\0'
 }requisicoes_t;
-requisicoes_t requisicao[MAXREQUISICOES];
+requisicoes_t requisicao[MAXREQUISICOES];//Numero maximo de requesicoes
 
 
-int nlivro=0;
-int nleitor=0;
-int requisicoes_ativas=0;
-int nrequisicoes=0;
+int nlivro=0;//Numero de livros
+int nleitor=0;//Numero de leitores
+int requisicoes_ativas=0;//Numero de livros que estao por devolver.
+int nrequisicoes=0;//Numero de todas as requisicoes realizadas. Todos os livros devolvidos e por devolver.
 
 
 int main(){
@@ -94,9 +100,10 @@ void exibir_menu(){
     Saidas: Nao tem
 */
 
-    int num=0;
-    char estado_requisitado[12]= "requisitado";
+    int num=0;//Armazena um numero fornecido pelo utilizador com o intuito de escolher uma opcao do menu
+    char estado_requisitado[12]= "requisitado";//Vetor utilizado para verificar quantos livros estao requisitados
     requisicoes_ativas=0;
+    //Calcula o numero de requisicoes ativas
     for(int i=0; i<nlivro;i++){
         if(strcmp(livro[i].Estado, estado_requisitado) == 0){
             requisicoes_ativas++;
@@ -153,13 +160,13 @@ void registar_livro(){
     Entradas: Nao tem
     Saidas: Nao tem
 */
-    char opcao1;
-    char opcao2;
+    char opcao1;//Armazena dados fornecido pelo utilizador com o intuito de escolher se o utilizador pertende confirmar o registo do livro
+    char opcao2;//Armazena dados fornecido pelo utilizador com o intuito de escolher se o utilizador pertende fazer outro registro
     int estado = 0;//Variavel utilizada para ligar e desligar
-    int string_comprimento=0;
-    int procurar_letras=0;
-    int verificar_caracteres=0;
-    char isbn_verificar[14];
+    int string_comprimento=0;//Verifica se o ISBN introduzido tem 13 caracteres
+    int procurar_letras=0;//Verifica se o ISBN introduzido apenas tem digitos
+    int verificar_caracteres=0;//Verifica se o Autor introduzido apenas tem letras ou " "
+    char isbn_verificar[14];//Vetor onde e guardado o ISBN
 
     if(nlivro<MAXLIVROS){
         do{//Codigo Verifica se o ISBN tem 13 digitos
@@ -702,6 +709,7 @@ void exibir_menu_listagens(){
     Saidas: Nao tem
 */
     int opcao=0;
+
     do{
         printf("\t-- Listagens --\n\n");
         printf("\t1 - Livro \n");
@@ -715,7 +723,7 @@ void exibir_menu_listagens(){
         printf("\n");
         switch(opcao){
             case 1:
-                system("cls");
+                system("cls");//Limpa a tela
                 printf("\t-- Livros --\n");
                 for (int n = 0; n < nlivro; n++) {
                     printf("\nLivro %d:\n\n", n + 1);
@@ -727,11 +735,11 @@ void exibir_menu_listagens(){
                 }
                 printf("\nPressione uma tecla para continuar!\n\n");
                 getch();
-                system("cls");
+                system("cls");//Limpa a tela
                 exibir_menu_listagens();
             break;
             case 2:
-                system("cls");
+                system("cls");//Limpa a tela
                 printf("\t-- Leitores --\n");
                 for (int n = 0; n < nleitor; n++) {
                     printf("\nLeitor %d: \n\n", n + 1);
@@ -743,11 +751,11 @@ void exibir_menu_listagens(){
                 }
                 printf("\nPressione uma tecla para continuar!\n\n");
                 getch();
-                system("cls");
+                system("cls");//Limpa a tela
                 exibir_menu_listagens();
             break;
             case 3:
-                system("cls");
+                system("cls");//Limpa a tela
                 printf("\t-- Requisicoes --\n");
                 for(int n=0; n<nrequisicoes;n++){
                     printf("\nRequisicao %d: \n\n", n+1);
@@ -759,19 +767,19 @@ void exibir_menu_listagens(){
                 printf("\n\n\tTotal de Requisicoes: %d \n\n", nrequisicoes);
                 printf("\nPressione uma tecla para continuar!\n\n");
                 getch();
-                system("cls");
+                system("cls");//Limpa a tela
                 exibir_menu_listagens();
             break;
             case 4:
-                system("cls");
+                system("cls");//Limpa a tela
                 requisitar_ultimas_10();
             break;
             case 0:
-                system("cls");
+                system("cls");//Limpa a tela
                 exibir_menu();
             break;
             default:
-                system("cls");
+                system("cls");//Limpa a tela
                 printf("Opcao invalida. Escolha uma do menu!\n\n");
         }
     }while(opcao!=1 && opcao!=2 && opcao!=3 && opcao!=4 && opcao!=0);
@@ -793,7 +801,7 @@ void requisitar_ultimas_10(){
     printf("Digite o codigo de leitor: ");
     fflush(stdin);
     scanf("%d", &leitor_codigo);
-    system("cls");
+    system("cls");//Limpa a tela
 
     for(int n=0; n<nrequisicoes;n++){//For para saber quantas requisicoes o leitor ja realizou
         if(leitor_codigo == requisicao[n].Codigo_leitor){
