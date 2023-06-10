@@ -1,5 +1,0 @@
-Registar Livro:
--Se se meter o ISBN 13 o número guardado n tem nada a ver.
-Resposta: para um inteiro guardar 13 numeros ter que ser (long long int), mas quando eu mudo de long int para lon long int aparecem me warnings nao percebo porque.
--Se o ISBN 10 tiver um 0 no inicio o programa ignora o 0.
-Resposta: tens razao, e necessario ser char ISBN[14], variaveis inteiros nao guardam zeros a esquerda.
