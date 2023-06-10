@@ -126,27 +126,27 @@ void exibir_menu(){
         printf("\n");
         switch(num){
             case 1:
-                system("cls");
+                system("cls");//Limpa a tela
                 registar_livro();
             break;
             case 2:
-                system("cls");
+                system("cls");//Limpa a tela
                 registar_leitor();
             break;
             case 3:
-                system("cls");
+                system("cls");//Limpa a tela
                 requisitar_livro();
             break;
             case 4:
-                system("cls");
+                system("cls");//Limpa a tela
                 devolver_livro();
             break;
             case 5:
-                system("cls");
+                system("cls");//Limpa a tela
                 exibir_menu_listagens();
             break;
             case 0:
-                system("cls");
+                system("cls");//Limpa a tela
                 desligar_programa();
             break;
             default:
@@ -204,7 +204,7 @@ void registar_livro(){
                     estado = 1;
                     printf("\nPressione alguma tecla para continuar!\n\n");
                     getch();
-                    system("cls");
+                    system("cls");//Limpa a tela
                     exibir_menu();
 
                 }
@@ -212,12 +212,12 @@ void registar_livro(){
         }
         strcpy(livro[nlivro].ISBN,isbn_verificar);//Permite copiar strOrigem para strDestino.
         estado = 0;
-        system("cls");
+        system("cls");//Limpa a tela
 
         fflush(stdin);
         printf("Digite o Titulo: ");
         gets(livro[nlivro].Titulo);
-        system("cls");
+        system("cls");//Limpa a tela
 
         do{
             fflush(stdin);
@@ -234,12 +234,12 @@ void registar_livro(){
             }
         }while(verificar_caracteres == 1);//So regista o autor se conter apenas letras
             printf("\n\tAutor: %s\n\n", livro[nlivro].Autor);
-            system("cls");
+            system("cls");//Limpa a tela
 
         fflush(stdin);
         printf("Digite a Editora: ");
         gets(livro[nlivro].Editora);
-        system("cls");
+        system("cls");//Limpa a tela
 
         strcpy(livro[nlivro].Estado, "disponivel");//Permite copiar strOrigem para strDestino.
 
@@ -257,7 +257,7 @@ void registar_livro(){
             switch(opcao1){//Utilizado para saber se o utilizador pertende confirmar o registo do livro
                 case 's':
                 case 'S':
-                    system("cls");
+                    system("cls");//Limpa a tela
                     nlivro++;//Se o utilizador pretender guardar o registo o indice de n livro avanca 1 valor
                     printf("Digite \"s\" para registar outro livro ou qualquer outra tecla para voltar ao menu:\n");
                     printf("\n\t\tOPCAO: ");
@@ -267,17 +267,17 @@ void registar_livro(){
                     switch(opcao2){//Utilizado para saber se o utilizador pertende fazer outro registro
                         case 's':
                         case 'S':
-                            system("cls");
+                            system("cls");//Limpa a tela
                             registar_livro();
                         break;
                         default:
-                            system("cls");
+                            system("cls");//Limpa a tela
                             exibir_menu();
                     }
                 break;
                 case 'n':
                 case 'N':
-                    system("cls");
+                    system("cls");//Limpa a tela
                     printf("Digite \"s\" para registar outro livro ou qualquer outra tecla para voltar ao menu: ");
                     printf("\n\n\t\tOPCAO: ");
                     fflush(stdin);
@@ -286,11 +286,11 @@ void registar_livro(){
                     switch(opcao2){//Utilizado para saber se o utilizador pertende fazer outro registro
                         case 's':
                         case 'S':
-                            system("cls");
+                            system("cls");//Limpa a tela
                             registar_livro();
                         break;
                         default:
-                            system("cls");
+                            system("cls");//Limpa a tela
                             exibir_menu();
                     }
                 break;
@@ -334,19 +334,19 @@ void registar_leitor(){
         for(int i=0; i<nleitor;i++){
             if(leitor[i].Codigo_leitor == verificar_leitor){//Verifica se o codigo leitor ja existe
                 if(estado == 0){
-                    system("cls");
+                    system("cls");//Limpa a tela
                     printf("O Codigo de leitor %d ja existe! \n\n",leitor[i].Codigo_leitor);
                     estado = 1;
                     printf("\nPressione alguma tecla para continuar!\n\n");
                     getch();
-                    system("cls");
+                    system("cls");//Limpa a tela
                     exibir_menu();
                 }
             }
         }
         leitor[nleitor].Codigo_leitor= verificar_leitor;
         estado = 0;
-        system("cls");
+        system("cls");//Limpa a tela
 
         do{
             fflush(stdin);
@@ -363,7 +363,7 @@ void registar_leitor(){
                 printf("\nO Nome apenas pode conter letras!\n\n");
             }
         }while(verificar_caracteres == 1);//So regista o nome se conter apenas letras
-        system("cls");
+        system("cls");//Limpa a tela
         do{
             if(verificar_data == 1){
                 printf("Data de Nascimento invalida!\n\n");
@@ -413,13 +413,13 @@ void registar_leitor(){
                 }
             }
         }while(verificar_data==1);
-        system("cls");
+        system("cls");//Limpa a tela
 
 
         fflush(stdin);
         printf("Insita a Localidade: ");
         gets(leitor[nleitor].Localidade);
-        system("cls");
+        system("cls");//Limpa a tela
 
         do{//Pede um contacto ate o contacto ter 9 digitos
             incrementador=0;
@@ -455,13 +455,13 @@ void registar_leitor(){
                 }
                 printf("\nPressione uma tecla para continuar!\n");
                 getch();
-                system("cls");
+                system("cls");//Limpa a tela
             }
 
 
         }while(contacto_registado==1 || incrementador!=9 || verificar_contacto==1);
          do{
-            system("cls");
+            system("cls");//Limpa a tela
             printf("Deseja confirmar o registo do leitor? \n");
             printf("\nDigite \"s\" se sim ou \"n\" se nao!\n");
             printf("\nCodigo de leitor:\t%d ", leitor[nleitor].Codigo_leitor);
@@ -476,7 +476,7 @@ void registar_leitor(){
             switch(opcao1){
                 case 's':
                 case 'S':
-                    system("cls");
+                    system("cls");//Limpa a tela
                     nleitor++;
                     printf("Deseja registar outro Leitor?\n");
                     printf("Digite \"s\" para registar outro leitor ou qualquer outra tecla para voltar ao menu: ");
@@ -486,18 +486,18 @@ void registar_leitor(){
                         case 's':
                         case 'S':
                             printf("\n");
-                            system("cls");
+                            system("cls");//Limpa a tela
                             registar_leitor();
                         break;
                         default:
                             printf("\n");
-                            system("cls");
+                            system("cls");//Limpa a tela
                             exibir_menu();
                     }
                 break;
                 case 'n':
                 case 'N':
-                    system("cls");
+                    system("cls");//Limpa a tela
                     printf("Deseja registar outro Leitor?\n");
                     printf("Digite \"s\" para registar outro leitor ou qualquer outra tecla para voltar ao menu: ");
                     fflush(stdin);
@@ -506,12 +506,12 @@ void registar_leitor(){
                         case 's':
                         case 'S':
                             printf("\n");
-                            system("cls");
+                            system("cls");//Limpa a tela
                             registar_leitor();
                         break;
                         default:
                             printf("\n");
-                            system("cls");
+                            system("cls");//Limpa a tela
                             exibir_menu();
                     }
                 default:
@@ -520,7 +520,7 @@ void registar_leitor(){
         }while(opcao1 != ('s' || 'S' || 'n' || 'N'));
     }else{
         printf("O numero maximo de registros de leitores foi atingido!\n\n");
-        system("cls");
+        system("cls");//Limpa a tela
         exibir_menu();
     }
 }
@@ -537,14 +537,14 @@ void requisitar_livro(){
     scanf("%d", &verificar_leitor);
     for(int i=0; i<nleitor;i++){
         if(leitor[i].Codigo_leitor == verificar_leitor){
-            system("cls");
+            system("cls");//Limpa a tela
             printf("Digite o ISBN do livro: ");
             fflush(stdin);
             gets(isbn);
             for(int n=0; n<nlivro; n++){
                 if(strcmp(isbn, livro[n].ISBN) == 0){//Verifica se o livro esta registado
                     if(strcmp(livro[n].Estado, "disponivel") == 0 && strcmp(livro[n].Estado, "inutilizavel") != 0 ){//Verifica a disponibilidade do livro
-                        system("cls");
+                        system("cls");//Limpa a tela
                         printf("Insira a data da requisicao!\n");
 
                         do{//Realiza o pedido da data de requisicao ate que a data seja valida!
@@ -591,7 +591,7 @@ void requisitar_livro(){
                             }
                         }while(verificar_data==1);
                         verificar_data = 0;
-                        system("cls");
+                        system("cls");//Limpa a tela
 
                         printf("Data de requisicao: %d/%d/%d\n",livro[n].dia_requisitar, livro[n].mes_requisitar, livro[n].ano_requisitar);
                         printf("\nRequisicao realizada com sucesso!\n\n");
@@ -606,14 +606,14 @@ void requisitar_livro(){
                         strcpy(livro[n].Estado, "requisitado");//Permite copiar strOrigem para strDestino.
                         printf("Pressione alguma tecla para continuar!\n\n");
                         getch();
-                        system("cls");
+                        system("cls");//Limpa a tela
                         exibir_menu();
                     }else{
-                        system("cls");
+                        system("cls");//Limpa a tela
                         printf("O livro nao esta disponivel!\n\n");
                         printf("Pressione alguma tecla para continuar!\n\n");
                         getch();
-                        system("cls");
+                        system("cls");//Limpa a tela
                         exibir_menu();
                     }
                 }
@@ -622,7 +622,7 @@ void requisitar_livro(){
             printf("Faca o registo do livro antes de o requisitar!\n\n");
             printf("Pressione alguma tecla para continuar!\n\n");
             getch();
-            system("cls");
+            system("cls");//Limpa a tela
             exibir_menu();
         }
     }
@@ -630,7 +630,7 @@ void requisitar_livro(){
     printf("Faca o registo do leitor antes de requisitar um livro!\n\n");
     printf("Pressione alguma tecla para continuar!\n\n");
     getch();
-    system("cls");
+    system("cls");//Limpa a tela
     exibir_menu();
 
 }
@@ -660,10 +660,10 @@ void devolver_livro(){
         printf("\nISBN invalido!\n");
         printf("\nPressione alguma tecla para continuar!\n\n");
         getch();
-        system("cls");
+        system("cls");//Limpa a tela
         exibir_menu();
     }
-    system("cls");
+    system("cls");//Limpa a tela
     if(strcmp(livro[n].Estado, "requisitado") == 0){
 
         printf("Livro devolvido!\n\n");
@@ -700,7 +700,7 @@ void devolver_livro(){
         }
     printf("\nPressione alguma tecla para continuar!\n\n");
     getch();
-    system("cls");
+    system("cls");//Limpa a tela
     exibir_menu();
 }
 void exibir_menu_listagens(){
@@ -839,7 +839,7 @@ void requisitar_ultimas_10(){
     }
     printf("\nPressione uma tecla para continuar!\n\n");
     getch();
-    system("cls");
+    system("cls");//Limpa a tela
     exibir_menu_listagens();
 }
 int calcular_dias_atual(){
@@ -927,11 +927,11 @@ void carregar_ficheiro(){
     fread(&nrequisicoes,sizeof(nrequisicoes),1,ficheiro);
 
     for (int n = 0; n < nlivro; n++) {
-        fread(&livro[n].ISBN,sizeof(livro[n].ISBN),1,ficheiro);
-        fread(&livro[n].Titulo,sizeof(livro[n].Titulo),1,ficheiro);
-        fread(&livro[n].Autor,sizeof(livro[n].Autor),1,ficheiro);
-        fread(&livro[n].Editora,sizeof(livro[n].Editora),1,ficheiro);
-        fread(&livro[n].Estado,sizeof(livro[n].Estado),1,ficheiro);
+        fread(livro[n].ISBN,sizeof(livro[n].ISBN),1,ficheiro);
+        fread(livro[n].Titulo,sizeof(livro[n].Titulo),1,ficheiro);
+        fread(livro[n].Autor,sizeof(livro[n].Autor),1,ficheiro);
+        fread(livro[n].Editora,sizeof(livro[n].Editora),1,ficheiro);
+        fread(livro[n].Estado,sizeof(livro[n].Estado),1,ficheiro);
         if(strcmp(livro[n].Estado, "requisitado") == 0){
             fread(&livro[n].dia_requisitar,sizeof(livro[n].dia_requisitar),1,ficheiro);
             fread(&livro[n].mes_requisitar,sizeof(livro[n].mes_requisitar),1,ficheiro);
@@ -940,20 +940,20 @@ void carregar_ficheiro(){
     }
     for (int n = 0; n < nleitor; n++) {
         fread(&leitor[n].Codigo_leitor,sizeof(leitor[n].Codigo_leitor),1,ficheiro);
-        fread(&leitor[n].Nome,sizeof(leitor[n].Nome),1,ficheiro);
+        fread(leitor[n].Nome,sizeof(leitor[n].Nome),1,ficheiro);
         fread(&leitor[n].Dia,sizeof(leitor[n].Dia),1,ficheiro);
         fread(&leitor[n].Mes,sizeof(leitor[n].Mes),1,ficheiro);
         fread(&leitor[n].Ano,sizeof(leitor[n].Ano),1,ficheiro);
-        fread(&leitor[n].Localidade,sizeof(leitor[n].Localidade),1,ficheiro);
+        fread(leitor[n].Localidade,sizeof(leitor[n].Localidade),1,ficheiro);
         fread(&leitor[n].Contacto,sizeof(leitor[n].Contacto),1,ficheiro);
     }
     for(int n=0; n<nrequisicoes;n++){
         fread(&requisicao[n].Codigo_leitor,sizeof(requisicao[n].Codigo_leitor),1,ficheiro);
-        fread(&requisicao[n].ISBN,sizeof(requisicao[n].ISBN),1,ficheiro);
+        fread(requisicao[n].ISBN,sizeof(requisicao[n].ISBN),1,ficheiro);
         fread(&requisicao[n].Dia,sizeof(requisicao[n].Dia),1,ficheiro);
         fread(&requisicao[n].Mes,sizeof(requisicao[n].Mes),1,ficheiro);
         fread(&requisicao[n].Ano,sizeof(requisicao[n].Ano),1,ficheiro);
-        fread(&requisicao[n].Estado_entrega,sizeof(requisicao[n].Estado_entrega),1,ficheiro);
+        fread(requisicao[n].Estado_entrega,sizeof(requisicao[n].Estado_entrega),1,ficheiro);
     }
     fclose(ficheiro);
 }
@@ -969,11 +969,11 @@ void guardar_ficheiro(){
     fwrite(&nrequisicoes,sizeof(nrequisicoes),1,ficheiro);
 
     for (int n = 0; n < nlivro; n++) {
-        fwrite(&livro[n].ISBN,sizeof(livro[n].ISBN),1,ficheiro);
-        fwrite(&livro[n].Titulo,sizeof(livro[n].Titulo),1,ficheiro);
-        fwrite(&livro[n].Autor,sizeof(livro[n].Autor),1,ficheiro);
-        fwrite(&livro[n].Editora,sizeof(livro[n].Editora),1,ficheiro);
-        fwrite(&livro[n].Estado,sizeof(livro[n].Estado),1,ficheiro);
+        fwrite(livro[n].ISBN,sizeof(livro[n].ISBN),1,ficheiro);
+        fwrite(livro[n].Titulo,sizeof(livro[n].Titulo),1,ficheiro);
+        fwrite(livro[n].Autor,sizeof(livro[n].Autor),1,ficheiro);
+        fwrite(livro[n].Editora,sizeof(livro[n].Editora),1,ficheiro);
+        fwrite(livro[n].Estado,sizeof(livro[n].Estado),1,ficheiro);
         if(strcmp(livro[n].Estado, "requisitado") == 0){
             fwrite(&livro[n].dia_requisitar,sizeof(livro[n].dia_requisitar),1,ficheiro);
             fwrite(&livro[n].mes_requisitar,sizeof(livro[n].mes_requisitar),1,ficheiro);
@@ -982,20 +982,20 @@ void guardar_ficheiro(){
     }
     for (int n = 0; n < nleitor; n++) {
         fwrite(&leitor[n].Codigo_leitor,sizeof(leitor[n].Codigo_leitor),1,ficheiro);
-        fwrite(&leitor[n].Nome,sizeof(leitor[n].Nome),1,ficheiro);
+        fwrite(leitor[n].Nome,sizeof(leitor[n].Nome),1,ficheiro);
         fwrite(&leitor[n].Dia,sizeof(leitor[n].Dia),1,ficheiro);
         fwrite(&leitor[n].Mes,sizeof(leitor[n].Mes),1,ficheiro);
         fwrite(&leitor[n].Ano,sizeof(leitor[n].Ano),1,ficheiro);
         fwrite(&leitor[n].Localidade,sizeof(leitor[n].Localidade),1,ficheiro);
-        fwrite(&leitor[n].Contacto,sizeof(leitor[n].Contacto),1,ficheiro);
+        fwrite(leitor[n].Contacto,sizeof(leitor[n].Contacto),1,ficheiro);
     }
     for(int n=0; n<nrequisicoes;n++){
         fwrite(&requisicao[n].Codigo_leitor,sizeof(requisicao[n].Codigo_leitor),1,ficheiro);
-        fwrite(&requisicao[n].ISBN,sizeof(requisicao[n].ISBN),1,ficheiro);
+        fwrite(requisicao[n].ISBN,sizeof(requisicao[n].ISBN),1,ficheiro);
         fwrite(&requisicao[n].Dia,sizeof(requisicao[n].Dia),1,ficheiro);
         fwrite(&requisicao[n].Mes,sizeof(requisicao[n].Mes),1,ficheiro);
         fwrite(&requisicao[n].Ano,sizeof(requisicao[n].Ano),1,ficheiro);
-        fwrite(&requisicao[n].Estado_entrega,sizeof(requisicao[n].Estado_entrega),1,ficheiro);
+        fwrite(requisicao[n].Estado_entrega,sizeof(requisicao[n].Estado_entrega),1,ficheiro);
     }
     fclose(ficheiro);
 }
@@ -1017,7 +1017,7 @@ void desligar_programa(){
             exit(0);
         break;
         default:
-            system("cls");
+            system("cls");//Limpa a tela
             exibir_menu();
     }
  }
