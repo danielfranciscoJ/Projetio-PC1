@@ -557,8 +557,12 @@ void requisitar_livro() {
                         do { //Realiza o pedido da data de requisicao ate que a data seja valida!
                             if(verificar_data == 1) {
                                 printf("\nData Invalida!\n");
-                                verificar_data = 0;
+                                printf("\nPressione alguma tecla para continuar!\n\n");
+                                getch();
+                                system("cls");//Limpa a tela
+                                printf("Insira a data da requisicao!\n");
                             }
+                            verificar_data=0;
                             do { //Pede um numero do dia da requisicao ate estar entre 1 e 31
                                 printf("\nDia: ");
                                 scanf("%d", &livro[n].dia_requisitar);
@@ -822,6 +826,7 @@ void requisitar_ultimas_10() {
         printf("\nCodigo de Leitor invalido!\n");
         printf("\nPressione alguma tecla para continuar!\n\n");
         getch();
+        system("cls");//Limpa a tela
         exibir_menu_listagens();
     }
 
@@ -1016,14 +1021,14 @@ void desligar_programa() {
     char opcao;//Variavel utilizada para obeter a confirmacao se o utilizador deseja encerrar o programa ou nao
     fflush(stdin);
     printf("Tem certeza que deseja sair?\n");
-    printf("Digite \"s\" para sair ou qualquer outra tecla para voltar ao menua: ");
+    printf("Digite \"s\" para sair ou qualquer outra tecla para voltar ao menu: ");
     scanf("%c", &opcao);
     switch(opcao) {
     case 's':
     case 'S':
         guardar_ficheiro();
         printf("\nO programa foi encerrado!\n");
-        exit(0);
+        exit(0);//comando que encerra o programa
         break;
     default:
         system("cls");//Limpa a tela

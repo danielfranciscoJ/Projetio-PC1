@@ -7,15 +7,16 @@
 	<conio.h>
 	<windows.h>
 
-1684962324 source:c:\users\dani\desktop\projetio-pc1\projeto\projeto.c
+1686658386 source:c:\users\dani\desktop\projetio-pc1\projeto\projeto.c
 	<stdio.h>
 	<stdlib.h>
 	<string.h>
+	<windows.h>
 	<time.h>
 	<conio.h>
-	<windows.h>
+	<ctype.h>
 
-1686663768 source:c:\users\diogo\documents\github\projetio-pc1\projeto\projeto.c
+1686664500 source:c:\users\diogo\documents\github\projetio-pc1\projeto\projeto.c
 	<stdio.h>
 	<stdlib.h>
 	<string.h>
