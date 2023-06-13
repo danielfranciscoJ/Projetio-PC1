@@ -415,7 +415,7 @@ void registar_leitor() {
 
 
         fflush(stdin);
-        printf("Insita a Localidade: ");
+        printf("Insira a Localidade: ");
         gets(leitor[nleitor].Localidade);
         system("cls");//Limpa a tela
 
