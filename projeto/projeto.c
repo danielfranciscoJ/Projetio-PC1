@@ -159,7 +159,6 @@ void registar_livro() {
         Entradas: Nao tem
         Saidas: Nao tem
     */
-    int estado = 0;//Variavel utilizada para ligar e desligar
     int string_comprimento=0;//Verifica se o ISBN introduzido tem 13 caracteres
     int procurar_letras=0;//Verifica se o ISBN introduzido apenas tem digitos
     char isbn_verificar[14];//Vetor onde e guardado o ISBN
@@ -169,12 +168,9 @@ void registar_livro() {
 
     if(nlivro<MAXLIVROS) {
         do { //Codigo Verifica se o ISBN tem 13 digitos
-            if(estado==1) {
-                printf("\nISBN necessita de conter 13 digitos!\n\n");
-            }
+
             string_comprimento = 0;
             do {
-
                 procurar_letras=0;
                 printf("Insira o ISBN: ");
                 fflush(stdin);
@@ -186,31 +182,34 @@ void registar_livro() {
                 }
                 if(procurar_letras ==1) {
                     printf("\nO ISBN e constituido apenas de numeros!\n\n");
+                    printf("\nPressione uma tecla para continuar!\n");
+                    getch();
+                    system("cls");//Limpa a tela
                 }
             } while(procurar_letras==1);//So sai do (do while) quando o utilizador digitar apenas numeros
             while(isbn_verificar[string_comprimento] != '\0') {
                 string_comprimento++;
             }
-            estado = 1;
+
+            if(string_comprimento != 13){
+                printf("\nISBN necessita de conter 13 digitos!\n\n");
+                    printf("\nPressione uma tecla para continuar!\n");
+                    getch();
+                    system("cls");//Limpa a tela
+            }
         } while(string_comprimento != 13);//So sai do (do while) quando o utilizador digitar 13 numeros
-        estado = 0;
 
         //Verifica se o ISBN ja esta registado no sistema!
         for(int i=0; i<nlivro; i++) {
             if(strcmp(livro[i].ISBN,isbn_verificar)==0) {
-                if(estado == 0) {
                     printf("\nO ISBN insirido ja existe! \n\n");
-                    estado = 1;
                     printf("\nPressione alguma tecla para continuar!\n\n");
                     getch();
                     system("cls");//Limpa a tela
                     exibir_menu();
-
-                }
             }
         }
         strcpy(livro[nlivro].ISBN,isbn_verificar);//Permite copiar strOrigem para strDestino.
-        estado = 0;
         system("cls");//Limpa a tela
 
         fflush(stdin);
@@ -230,6 +229,9 @@ void registar_livro() {
             }
             if(verificar_caracteres == 1) {
                 printf("\nO Nome apenas pode conter letras!\n\n");
+                printf("\nPressione alguma tecla para continuar!\n\n");
+                getch();
+                system("cls");//Limpa a tela
             }
         } while(verificar_caracteres == 1);//So regista o autor se conter apenas letras
         printf("\n\tAutor: %s\n\n", livro[nlivro].Autor);
@@ -359,12 +361,18 @@ void registar_leitor() {
 
             if(verificar_caracteres==1) {
                 printf("\nO Nome apenas pode conter letras!\n\n");
+                printf("\nPressione alguma tecla para continuar!\n\n");
+                getch();
+                system("cls");//Limpa a tela
             }
         } while(verificar_caracteres == 1);//So regista o nome se conter apenas letras
         system("cls");//Limpa a tela
         do {
             if(verificar_data == 1) {
-                printf("Data de Nascimento invalida!\n\n");
+                printf("\nData de Nascimento invalida!\n\n");
+                printf("\nPressione alguma tecla para continuar!\n\n");
+                getch();
+                system("cls");//Limpa a tela
             }
             verificar_data=0;
             printf("Insira a data de Nascimento:\n");
@@ -390,7 +398,7 @@ void registar_leitor() {
 
 
             //Verifica se no mes de fevereiro foi introduzido mais de 29 dias em anos bissextos
-            if(leitor[nleitor].Ano %4 == 0) {
+            if(leitor[nleitor].Ano %4 == 0) {//Resto da divisao inteira do ano bisexto e 0
                 if(leitor[nleitor].Mes == 2) {
                     if(leitor[nleitor].Dia > 29) {
                         verificar_data = 1;
@@ -398,7 +406,7 @@ void registar_leitor() {
                 }
             }
             //Verifica se no mes de fevereiro foi introduzido mais de 28 dias em anos nao bissextos
-            if(leitor[nleitor].Ano %4 == 1) {
+            if(leitor[nleitor].Ano %4 == 1 || leitor[nleitor].Ano %4 == 2 || leitor[nleitor].Ano %4 == 3) {//Resto da divisao inteira do ano bisexto e 1,2 ou 3
                 if(leitor[nleitor].Mes == 2) {
                     if(leitor[nleitor].Dia> 28) {
                         verificar_data = 1;
@@ -408,6 +416,7 @@ void registar_leitor() {
             //Verifica se em abril, junho, setembro ou novembro tem mais de 30 dias
             if(leitor[nleitor].Mes == 4 || leitor[nleitor].Mes == 6 || leitor[nleitor].Mes == 9 || leitor[nleitor].Mes == 11) {
                 if(leitor[nleitor].Dia> 30) {
+                        verificar_data=1;
                 }
             }
         } while(verificar_data==1);
@@ -415,7 +424,7 @@ void registar_leitor() {
 
 
         fflush(stdin);
-        printf("Insita a Localidade: ");
+        printf("Insira a Localidade: ");
         gets(leitor[nleitor].Localidade);
         system("cls");//Limpa a tela
 
@@ -451,7 +460,7 @@ void registar_leitor() {
                 if(verificar_contacto==1) {
                     printf("\nO contacto so pode conter numeros!\n\n");
                 }
-                printf("\nPressione uma tecla para continuar!\n");
+                printf("\n\nPressione uma tecla para continuar!\n");
                 getch();
                 system("cls");//Limpa a tela
             }
@@ -574,7 +583,7 @@ void requisitar_livro() {
                                 }
                             }
                             //Verifica se no mes de fevereiro foi introduzido mais de 28 dias em anos nao bissextos
-                            if(livro[n].ano_requisitar %4 == 1) {
+                            if(livro[n].ano_requisitar %4 == 1 || livro[n].ano_requisitar %4 == 2 ||livro[n].ano_requisitar %4 == 3) {
                                 if(livro[n].mes_requisitar == 2) {
                                     if(livro[n].dia_requisitar> 28) {
                                         verificar_data = 1;
