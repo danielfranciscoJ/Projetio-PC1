@@ -191,22 +191,22 @@ void registar_livro() {
                 string_comprimento++;
             }
 
-            if(string_comprimento != 13){
+            if(string_comprimento != 13) {
                 printf("\nISBN necessita de conter 13 digitos!\n\n");
-                    printf("\nPressione uma tecla para continuar!\n");
-                    getch();
-                    system("cls");//Limpa a tela
+                printf("\nPressione uma tecla para continuar!\n");
+                getch();
+                system("cls");//Limpa a tela
             }
         } while(string_comprimento != 13);//So sai do (do while) quando o utilizador digitar 13 numeros
 
         //Verifica se o ISBN ja esta registado no sistema!
         for(int i=0; i<nlivro; i++) {
             if(strcmp(livro[i].ISBN,isbn_verificar)==0) {
-                    printf("\nO ISBN insirido ja existe! \n\n");
-                    printf("\nPressione alguma tecla para continuar!\n\n");
-                    getch();
-                    system("cls");//Limpa a tela
-                    exibir_menu();
+                printf("\nO ISBN insirido ja existe! \n\n");
+                printf("\nPressione alguma tecla para continuar!\n\n");
+                getch();
+                system("cls");//Limpa a tela
+                exibir_menu();
             }
         }
         strcpy(livro[nlivro].ISBN,isbn_verificar);//Permite copiar strOrigem para strDestino.
@@ -301,6 +301,9 @@ void registar_livro() {
         } while(opcao1 != ('s' || 'S' || 'n' || 'N'));
     } else {
         printf("O numero maximo de registros de livros foi atingido!\n\n");
+        printf("\nPressione uma tecla para continuar!\n");
+        getch();
+        system("cls");//Limpa a tela
         exibir_menu();
     }
 
@@ -416,7 +419,7 @@ void registar_leitor() {
             //Verifica se em abril, junho, setembro ou novembro tem mais de 30 dias
             if(leitor[nleitor].Mes == 4 || leitor[nleitor].Mes == 6 || leitor[nleitor].Mes == 9 || leitor[nleitor].Mes == 11) {
                 if(leitor[nleitor].Dia> 30) {
-                        verificar_data=1;
+                    verificar_data=1;
                 }
             }
         } while(verificar_data==1);
@@ -527,6 +530,8 @@ void registar_leitor() {
         } while(opcao1 != ('s' || 'S' || 'n' || 'N'));
     } else {
         printf("O numero maximo de registros de leitores foi atingido!\n\n");
+        printf("\nPressione uma tecla para continuar!\n");
+        getch();
         system("cls");//Limpa a tela
         exibir_menu();
     }
@@ -539,110 +544,124 @@ void requisitar_livro() {
     int verificar_leitor = 0;//Armazena o codigo de leitor intoduzido pelo leitor e compara com todos os codigos de leitores para verificar se o leitor ja existe
     char isbn[14];//Armazena o  ISBN intoduzido pelo leitor e compara com todos os ISBN para verificar se o livro esta registado
     int verificar_data = 0;//Verifica se a data introduzida pelo utilizador e valida
-    printf("Digite o seu codigo de leitor: ");
-    fflush(stdin);
-    scanf("%d", &verificar_leitor);
-    for(int i=0; i<nleitor; i++) {
-        if(leitor[i].Codigo_leitor == verificar_leitor) {
-            system("cls");//Limpa a tela
-            printf("Digite o ISBN do livro: ");
-            fflush(stdin);
-            gets(isbn);
-            for(int n=0; n<nlivro; n++) {
-                if(strcmp(isbn, livro[n].ISBN) == 0) { //Verifica se o livro esta registado
-                    if(strcmp(livro[n].Estado, "disponivel") == 0 && strcmp(livro[n].Estado, "inutilizavel") != 0 ) { //Verifica a disponibilidade do livro
-                        system("cls");//Limpa a tela
-                        printf("Insira a data da requisicao!\n");
+    time_t tempo;
+    struct tm *timeinfo;
+    time(&tempo);
+    timeinfo=localtime(&tempo);
+    int ano_atual=timeinfo->tm_year+1900;//O ano atual e utilizado para definir como limete na data de requisicao
 
-                        do { //Realiza o pedido da data de requisicao ate que a data seja valida!
-                            if(verificar_data == 1) {
-                                printf("\nData Invalida!\n");
-                                printf("\nPressione alguma tecla para continuar!\n\n");
-                                getch();
-                                system("cls");//Limpa a tela
-                                printf("Insira a data da requisicao!\n");
-                            }
-                            verificar_data=0;
-                            do { //Pede um numero do dia da requisicao ate estar entre 1 e 31
-                                printf("\nDia: ");
-                                scanf("%d", &livro[n].dia_requisitar);
-                            } while(livro[n].dia_requisitar <1 || livro[n].dia_requisitar >31);
+    if(nrequisicoes<MAXREQUISICOES) {
+        printf("Digite o seu codigo de leitor: ");
+        fflush(stdin);
+        scanf("%d", &verificar_leitor);
+        for(int i=0; i<nleitor; i++) {
+            if(leitor[i].Codigo_leitor == verificar_leitor) {
+                system("cls");//Limpa a tela
+                printf("Digite o ISBN do livro: ");
+                fflush(stdin);
+                gets(isbn);
+                for(int n=0; n<nlivro; n++) {
+                    if(strcmp(isbn, livro[n].ISBN) == 0) { //Verifica se o livro esta registado
+                        if(strcmp(livro[n].Estado, "disponivel") == 0 && strcmp(livro[n].Estado, "inutilizavel") != 0 ) { //Verifica a disponibilidade do livro
+                            system("cls");//Limpa a tela
+                            printf("Insira a data da requisicao!\n");
 
-                            do { //Pede um numero do mes da requisicao ate estar entre 1 e 12
-                                printf("Mes: ");
-                                scanf("%d", &livro[n].mes_requisitar);
-                            } while(livro[n].mes_requisitar <1 || livro[n].mes_requisitar >12);
+                            do { //Realiza o pedido da data de requisicao ate que a data seja valida!
+                                if(verificar_data == 1) {
+                                    printf("\nData Invalida!\n");
+                                    printf("\nPressione alguma tecla para continuar!\n\n");
+                                    getch();
+                                    system("cls");//Limpa a tela
+                                    printf("Insira a data da requisicao!\n");
+                                }
+                                verificar_data=0;
+                                do { //Pede um numero do dia da requisicao ate estar entre 1 e 31
+                                    printf("\nDia: ");
+                                    scanf("%d", &livro[n].dia_requisitar);
+                                } while(livro[n].dia_requisitar <1 || livro[n].dia_requisitar >31);
 
-                            do { //Pede um numero do ano de requisicao ate ser maior que 2000
-                                printf("Ano: ");
-                                scanf("%d", &livro[n].ano_requisitar);
-                            } while(livro[n].ano_requisitar<2000);
+                                do { //Pede um numero do mes da requisicao ate estar entre 1 e 12
+                                    printf("Mes: ");
+                                    scanf("%d", &livro[n].mes_requisitar);
+                                } while(livro[n].mes_requisitar <1 || livro[n].mes_requisitar >12);
 
-                            //Verifica se no mes de fevereiro foi introduzido mais de 29 dias em anos bissextos
-                            if(livro[n].ano_requisitar %4 == 0) {
-                                if(livro[n].mes_requisitar == 2) {
-                                    if(livro[n].dia_requisitar > 29) {
+                                do { //Pede um numero do ano de requisicao ate ser maior que 2000
+                                    printf("Ano: ");
+                                    scanf("%d", &livro[n].ano_requisitar);
+                                } while(livro[n].ano_requisitar<2000 || livro[n].ano_requisitar>ano_atual);
+
+                                //Verifica se no mes de fevereiro foi introduzido mais de 29 dias em anos bissextos
+                                if(livro[n].ano_requisitar %4 == 0) {
+                                    if(livro[n].mes_requisitar == 2) {
+                                        if(livro[n].dia_requisitar > 29) {
+                                            verificar_data = 1;
+                                        }
+                                    }
+                                }
+                                //Verifica se no mes de fevereiro foi introduzido mais de 28 dias em anos nao bissextos
+                                if(livro[n].ano_requisitar %4 == 1 || livro[n].ano_requisitar %4 == 2 ||livro[n].ano_requisitar %4 == 3) {
+                                    if(livro[n].mes_requisitar == 2) {
+                                        if(livro[n].dia_requisitar> 28) {
+                                            verificar_data = 1;
+                                        }
+                                    }
+                                }
+                                //Verifica se em abril, junho, setembro ou novembro tem mais de 30 dias
+                                if(livro[n].mes_requisitar == 4 || livro[n].mes_requisitar == 6 || livro[n].mes_requisitar == 9 || livro[n].mes_requisitar == 11) {
+                                    if(livro[n].dia_requisitar> 30) {
                                         verificar_data = 1;
                                     }
                                 }
-                            }
-                            //Verifica se no mes de fevereiro foi introduzido mais de 28 dias em anos nao bissextos
-                            if(livro[n].ano_requisitar %4 == 1 || livro[n].ano_requisitar %4 == 2 ||livro[n].ano_requisitar %4 == 3) {
-                                if(livro[n].mes_requisitar == 2) {
-                                    if(livro[n].dia_requisitar> 28) {
-                                        verificar_data = 1;
-                                    }
-                                }
-                            }
-                            //Verifica se em abril, junho, setembro ou novembro tem mais de 30 dias
-                            if(livro[n].mes_requisitar == 4 || livro[n].mes_requisitar == 6 || livro[n].mes_requisitar == 9 || livro[n].mes_requisitar == 11) {
-                                if(livro[n].dia_requisitar> 30) {
-                                    verificar_data = 1;
-                                }
-                            }
-                        } while(verificar_data==1);
-                        verificar_data = 0;
-                        system("cls");//Limpa a tela
+                            } while(verificar_data==1);
+                            verificar_data = 0;
+                            system("cls");//Limpa a tela
 
-                        printf("Data de requisicao: %d/%d/%d\n",livro[n].dia_requisitar, livro[n].mes_requisitar, livro[n].ano_requisitar);
-                        printf("\nRequisicao realizada com sucesso!\n\n");
+                            printf("Data de requisicao: %d/%d/%d\n",livro[n].dia_requisitar, livro[n].mes_requisitar, livro[n].ano_requisitar);
+                            printf("\nRequisicao realizada com sucesso!\n\n");
 
-                        requisicao[nrequisicoes].Codigo_leitor = leitor[i].Codigo_leitor;
-                        strcpy(requisicao[nrequisicoes].ISBN,livro[n].ISBN);
-                        requisicao[nrequisicoes].Dia = livro[n].dia_requisitar;
-                        requisicao[nrequisicoes].Mes = livro[n].mes_requisitar;
-                        requisicao[nrequisicoes].Ano = livro[n].ano_requisitar;
-                        strcpy(requisicao[nrequisicoes].Estado_entrega,"requisitado");
-                        nrequisicoes++;
-                        strcpy(livro[n].Estado, "requisitado");//Permite copiar strOrigem para strDestino.
-                        printf("Pressione alguma tecla para continuar!\n\n");
-                        getch();
-                        system("cls");//Limpa a tela
-                        exibir_menu();
-                    } else {
-                        system("cls");//Limpa a tela
-                        printf("O livro nao esta disponivel!\n\n");
-                        printf("Pressione alguma tecla para continuar!\n\n");
-                        getch();
-                        system("cls");//Limpa a tela
-                        exibir_menu();
+                            requisicao[nrequisicoes].Codigo_leitor = leitor[i].Codigo_leitor;
+                            strcpy(requisicao[nrequisicoes].ISBN,livro[n].ISBN);
+                            requisicao[nrequisicoes].Dia = livro[n].dia_requisitar;
+                            requisicao[nrequisicoes].Mes = livro[n].mes_requisitar;
+                            requisicao[nrequisicoes].Ano = livro[n].ano_requisitar;
+                            strcpy(requisicao[nrequisicoes].Estado_entrega,"requisitado");
+                            nrequisicoes++;
+                            strcpy(livro[n].Estado, "requisitado");//Permite copiar strOrigem para strDestino.
+                            printf("Pressione alguma tecla para continuar!\n\n");
+                            getch();
+                            system("cls");//Limpa a tela
+                            exibir_menu();
+                        } else {
+                            system("cls");//Limpa a tela
+                            printf("O livro nao esta disponivel!\n\n");
+                            printf("Pressione alguma tecla para continuar!\n\n");
+                            getch();
+                            system("cls");//Limpa a tela
+                            exibir_menu();
+                        }
                     }
                 }
+                printf("\nISBN invalido!\n");
+                printf("Faca o registo do livro antes de o requisitar!\n\n");
+                printf("Pressione alguma tecla para continuar!\n\n");
+                getch();
+                system("cls");//Limpa a tela
+                exibir_menu();
             }
-            printf("\nISBN invalido!\n");
-            printf("Faca o registo do livro antes de o requisitar!\n\n");
-            printf("Pressione alguma tecla para continuar!\n\n");
-            getch();
-            system("cls");//Limpa a tela
-            exibir_menu();
         }
+        printf("\nCodigo de Leitor invalido!\n");
+        printf("Faca o registo do leitor antes de requisitar um livro!\n\n");
+        printf("Pressione alguma tecla para continuar!\n\n");
+        getch();
+        system("cls");//Limpa a tela
+        exibir_menu();
+    } else {
+        printf("O maximo de requisicoes foi atingido!\n\n");
+        printf("\nPressione alguma tecla para continuar!\n\n");
+        getch();
+        system("cls");//Limpa a tela
+        exibir_menu();
     }
-    printf("\nCodigo de Leitor invalido!\n");
-    printf("Faca o registo do leitor antes de requisitar um livro!\n\n");
-    printf("Pressione alguma tecla para continuar!\n\n");
-    getch();
-    system("cls");//Limpa a tela
-    exibir_menu();
 
 }
 void devolver_livro() {
@@ -690,13 +709,20 @@ void devolver_livro() {
         switch(opcao) {
         case 's':
         case 'S':
-            for(int i=0; i<nrequisicoes; i++) {
-                if(strcmp(livro[n].ISBN, requisicao[i].ISBN) == 0) {
+            strcpy(livro[n].Estado,"inutilizavel");
+            for(int i=MAXREQUISICOES; i>=0; i--) { //Verifica a estrutura requisicao de tras para a frente para encontrar a ultima requisicao feita
+                if(strcmp(isbn, requisicao[i].ISBN) == 0) {
+                    printf("%d",i);
                     strcpy(requisicao[i].Estado_entrega, "inutilizavel");
-                    strcpy(livro[n].Estado,"inutilizavel");
+                    printf("\nO livro esta inutilizavel!\n");
+                    printf("\nPressione alguma tecla para continuar!\n\n");
+                    getch();
+                    system("cls");//Limpa a tela
+
+                    exibir_menu();
                 }
             }
-            printf("\nO livro esta inutilizavel!\n");
+
             break;
         default:
             for(int i=0; i<nrequisicoes; i++) {
@@ -793,6 +819,9 @@ void exibir_menu_listagens() {
         default:
             system("cls");//Limpa a tela
             printf("Opcao invalida. Escolha uma do menu!\n\n");
+            printf("\nPressione alguma tecla para continuar!\n\n");
+            getch();
+            system("cls");//Limpa a tela
         }
     } while(opcao!=1 && opcao!=2 && opcao!=3 && opcao!=4 && opcao!=0);
 
@@ -802,7 +831,6 @@ void requisitar_ultimas_10() {
         Entradas: Nao tem
         Saidas: Nao tem
     */
-    int n=0;//Indice do vetor
     int leitor_codigo=0;//Pede o o codigo de leitor ao utilizador
     int verificar_leitor=0;//Verifica se o codigo de leitor e valido
     int nrequisicoes_por_leitor = 0;//Verifica quantas requisicoes foram feitas pelo leitor
@@ -816,9 +844,9 @@ void requisitar_ultimas_10() {
     scanf("%d", &leitor_codigo);
     system("cls");//Limpa a tela
 
+
     for(int n=0; n<nrequisicoes; n++) { //For para saber quantas requisicoes o leitor ja realizou
-        if(leitor_codigo == requisicao[n].Codigo_leitor) {
-            nrequisicoes_por_leitor++;
+        if(leitor_codigo == leitor[n].Codigo_leitor) {
             verificar_leitor=1;
         }
     }
@@ -830,27 +858,39 @@ void requisitar_ultimas_10() {
         exibir_menu_listagens();
     }
 
-    num_requisicoes=nrequisicoes_por_leitor;//E necessario passar o valor das requisicoes para outra variavel porque depois quanto tiver a decrementar no ciclo for o valor tambem ira decrementar na condicao dentro do ciclo for o que nao e pretendido.
-    printf("\t-- Ultimas 10 Requisicoes do leitor %d --\n\n", requisicao[n].Codigo_leitor);
-    for(int n=0; n<(num_requisicoes+incrementa); n++) { //e necessario somar a variavel incrementar para que as requisicoes que foram feitas por outros leitores nao contarem no for
+    for(int n=0; n<nrequisicoes; n++) { //For para saber quantas requisicoes o leitor ja realizou
         if(leitor_codigo == requisicao[n].Codigo_leitor) {
-            nrequisicoes_por_leitor--;
-        } else {
-            incrementa++;//Se a requisicao nao for feita pelo utilizador o valor de n nao pode ser incrementado
+            nrequisicoes_por_leitor++;
         }
-        if(nrequisicoes_por_leitor<10) {
+    }
+
+    printf("\t-- Ultimas 10 Requisicoes do leitor %d --\n\n", leitor_codigo);
+    if(nrequisicoes_por_leitor==0) {
+        printf("O leitor ainda nao requisitou nenhum livro!\n");
+
+    } else {
+        num_requisicoes=nrequisicoes_por_leitor;//E necessario passar o valor das requisicoes para outra variavel porque depois quanto tiver a decrementar no ciclo for o valor tambem ira decrementar na condicao dentro do ciclo for o que nao e pretendido.
+        for(int n=0; n<(num_requisicoes+incrementa); n++) { //e necessario somar a variavel incrementar para que as requisicoes que foram feitas por outros leitores nao contarem no for
             if(leitor_codigo == requisicao[n].Codigo_leitor) {
-                printf("ISBN: %s\n", requisicao[n].ISBN);
-                for(int i=0; i<nlivro; i++) {
-                    if(strcmp(requisicao[n].ISBN,livro[i].ISBN)==0) {
-                        printf("Titulo: %s\n", livro[i].Titulo);
+                nrequisicoes_por_leitor--;
+            } else {
+                incrementa++;//Se a requisicao nao for feita pelo utilizador o valor de n nao pode ser incrementado
+            }
+            if(nrequisicoes_por_leitor<10) {
+                if(leitor_codigo == requisicao[n].Codigo_leitor) {
+                    printf("ISBN: %s\n", requisicao[n].ISBN);
+                    for(int i=0; i<nlivro; i++) {
+                        if(strcmp(requisicao[n].ISBN,livro[i].ISBN)==0) {
+                            printf("Titulo: %s\n", livro[i].Titulo);
+                        }
                     }
+                    printf("Data de requisicao: %d/%d/%d\n", requisicao[n].Dia,requisicao[n].Mes,requisicao[n].Ano);
+                    printf("Estado da entrega: %s \n\n", requisicao[n].Estado_entrega);
                 }
-                printf("Data de requisicao: %d/%d/%d\n", requisicao[n].Dia,requisicao[n].Mes,requisicao[n].Ano);
-                printf("Estado da entrega: %s \n\n", requisicao[n].Estado_entrega);
             }
         }
     }
+
     printf("\nPressione uma tecla para continuar!\n\n");
     getch();
     system("cls");//Limpa a tela
@@ -934,7 +974,7 @@ void carregar_ficheiro() {
     FILE *ficheiro;//Ponteiro para ficheiro
     ficheiro = fopen("Biblioteca.dat", "rb");
     if(ficheiro == NULL) { //Testar se “funcionou”
-        printf("Erro na criaçao do ficheiro!\n\n");
+        printf("Criacao do ficheiro!\n\n");
     }
     fread(&nlivro,sizeof(nlivro),1,ficheiro);
     fread(&nleitor,sizeof(nleitor),1,ficheiro);
